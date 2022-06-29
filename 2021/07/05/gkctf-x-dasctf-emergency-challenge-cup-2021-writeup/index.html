@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="MISC签到wireshark打开可知是shell流量，命令结果编码为hex+base64。观察前面几条whoami&#x2F;ls等命令输出可知每行输出都是倒序输出。故将cat &#x2F;f14g|base64的结果每行倒序拼接解码后得到flag的编辑记录，去除双写得到flag。 你知道apng吗将apng转换为gif后查看，发现部分关键帧内有二维码。 扫描结果顺序拼接得到flag。     银杏岛の奇妙冒险 F">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root">
+<meta property="og:url" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/index.html">
+<meta property="og:site_name" content="Recharging Runtime">
+<meta property="og:description" content="MISC签到wireshark打开可知是shell流量，命令结果编码为hex+base64。观察前面几条whoami&#x2F;ls等命令输出可知每行输出都是倒序输出。故将cat &#x2F;f14g|base64的结果每行倒序拼接解码后得到flag的编辑记录，去除双写得到flag。 你知道apng吗将apng转换为gif后查看，发现部分关键帧内有二维码。 扫描结果顺序拼接得到flag。     银杏岛の奇妙冒险 F">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/1.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/2.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/3.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/4.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/5.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/6.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/7.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/8.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/9.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/10.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/11.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/12.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/13.png">
+<meta property="og:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/14.png">
+<meta property="article:published_time" content="2021-07-05T01:34:00.000Z">
+<meta property="article:modified_time" content="2022-06-18T14:55:32.372Z">
+<meta property="article:author" content="b_y">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Writeups">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/1.png">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="Recharging Runtime" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2021/07/29/ctfshow-web-getting-started-sql-injection/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2021/07/05/ciscn2021-northeast-writeup/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&text=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&title=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&is_video=false&description=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root&body=Check out this article: https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&title=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&title=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&title=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&title=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&name=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&t=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MISC"><span class="toc-number">1.</span> <span class="toc-text">MISC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AD%BE%E5%88%B0"><span class="toc-number">1.1.</span> <span class="toc-text">签到</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%A0%E7%9F%A5%E9%81%93apng%E5%90%97"><span class="toc-number">1.2.</span> <span class="toc-text">你知道apng吗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%B6%E6%9D%8F%E5%B2%9B%E3%81%AE%E5%A5%87%E5%A6%99%E5%86%92%E9%99%A9"><span class="toc-number">1.3.</span> <span class="toc-text">银杏岛の奇妙冒险</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FireFox-Forensics"><span class="toc-number">1.4.</span> <span class="toc-text">FireFox Forensics</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#excel%E9%AA%9A%E6%93%8D%E4%BD%9C"><span class="toc-number">1.5.</span> <span class="toc-text">excel骚操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reverse"><span class="toc-number">2.</span> <span class="toc-text">Reverse</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#QQQQT"><span class="toc-number">2.1.</span> <span class="toc-text">QQQQT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crash"><span class="toc-number">2.2.</span> <span class="toc-text">Crash</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web"><span class="toc-number">3.</span> <span class="toc-text">Web</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#easycms"><span class="toc-number">3.1.</span> <span class="toc-text">easycms</span></a></li></ol></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">b_y</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2021-07-05T01:34:00.000Z" itemprop="datePublished">2021-07-05</time>
+        
+        (Updated: <time datetime="2022-06-18T14:55:32.372Z" itemprop="dateModified">2022-06-18</time>)
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="tag-link-link" href="/tags/Writeups/" rel="tag">Writeups</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h2><h3 id="签到"><a href="#签到" class="headerlink" title="签到"></a>签到</h3><p>wireshark打开可知是shell流量，命令结果编码为hex+base64。观察前面几条<code>whoami/ls</code>等命令输出可知每行输出都是倒序输出。<br><img src="1.png"><br>故将<code>cat /f14g|base64</code>的结果每行倒序拼接解码后得到flag的编辑记录，去除双写得到flag。<br><img src="2.png"></p>
+<h3 id="你知道apng吗"><a href="#你知道apng吗" class="headerlink" title="你知道apng吗"></a>你知道apng吗</h3><p>将apng转换为gif后查看，发现部分关键帧内有二维码。<br><img src="3.png"><br><img src="4.png"><br><img src="5.png" alt="笑死 这不画一遍能扫出来?.png"><br><img src="6.png"><br><img src="7.png"></p>
+<p>扫描结果顺序拼接得到flag。    </p>
+<h3 id="银杏岛の奇妙冒险"><a href="#银杏岛の奇妙冒险" class="headerlink" title="银杏岛の奇妙冒险"></a>银杏岛の奇妙冒险</h3><p><img src="8.png"><br><img src="9.png"><br><img src="10.png"><br><img src="11.png"></p>
+<h3 id="FireFox-Forensics"><a href="#FireFox-Forensics" class="headerlink" title="FireFox Forensics"></a>FireFox Forensics</h3><p>下载下来解压以后有一个json文件和一个sql存储的db数据库文件，查看db数据库内容是加密的，又根据题目提示本题内容属于登录信息相关，应该是FireFox浏览器所存储的登录信息，在Github上已有相关的<a target="_blank" rel="noopener" href="https://github.com/lclevy/firepwd">解密脚本</a>，直接下载以后将题目给出的两个文件放入相同目录，使用<code>python3 firepwd.py</code>即可成功解密得到flag</p>
+<h3 id="excel骚操作"><a href="#excel骚操作" class="headerlink" title="excel骚操作"></a>excel骚操作</h3><p>打开看到一行字，根据提示flag隐写在表格中。<br>依次查看单元格/解压查看数据可发现部分单元格值为1，查看单元格格式可发现格式为;;;，改变格式后正常显示出数字。<br>设置条件格式，使得所有值为1的单元格黑色填充，并拉伸所有数字范围内单元格至正方形，得到黑色单元格画成的汉信码。<br><img src="12.png"></p>
+<p>使用中国编码app扫描得到flag。    </p>
+<h2 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h2><h3 id="QQQQT"><a href="#QQQQT" class="headerlink" title="QQQQT"></a>QQQQT</h3><p>下载后使用PEID扫描是WIN32程序，拖入IDA32分析可看出程序显然是由Qt语言所编写，题目名称也印证了这一点，一开始在IDA的WinMain窗口中多次依照逻辑查找无果，之后又在OD中尝试进行动态调试，在分析出的字符串当中找到了flag相关的关键词已经其上下的文本地址<img src="13.png"></p>
+<p><img src="14.png"><br>然后在IDA中根据以上地址找到这些字符串所在的位置，可以得到如下函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">int</span> __thiscall <span class="title function_">sub_4012F0</span><span class="params">(_DWORD *this)</span></span><br><span class="line">&#123;</span><br><span class="line">  <span class="type">int</span> v1; <span class="comment">// edi</span></span><br><span class="line">  _BYTE *v2; <span class="comment">// esi</span></span><br><span class="line">  <span class="type">const</span> <span class="type">char</span> *v3; <span class="comment">// edx</span></span><br><span class="line">  _BYTE *v4; <span class="comment">// esi</span></span><br><span class="line">  <span class="type">int</span> v5; <span class="comment">// ecx</span></span><br><span class="line">  <span class="type">int</span> v6; <span class="comment">// eax</span></span><br><span class="line">  <span class="type">int</span> v7; <span class="comment">// ecx</span></span><br><span class="line">  <span class="type">int</span> v8; <span class="comment">// edx</span></span><br><span class="line">  <span class="type">int</span> v9; <span class="comment">// edi</span></span><br><span class="line">  <span class="type">int</span> v10; <span class="comment">// esi</span></span><br><span class="line">  _BYTE *v11; <span class="comment">// ecx</span></span><br><span class="line">  <span class="type">unsigned</span> <span class="type">int</span> v12; <span class="comment">// ecx</span></span><br><span class="line">  <span class="type">int</span> v14; <span class="comment">// [esp-8h] [ebp-A8h]</span></span><br><span class="line">  <span class="type">char</span> v16[<span class="number">4</span>]; <span class="comment">// [esp+10h] [ebp-90h] BYREF</span></span><br><span class="line">  <span class="type">char</span> v17[<span class="number">4</span>]; <span class="comment">// [esp+14h] [ebp-8Ch] BYREF</span></span><br><span class="line">  _BYTE *v18; <span class="comment">// [esp+18h] [ebp-88h]</span></span><br><span class="line">  <span class="type">const</span> <span class="type">char</span> *v19; <span class="comment">// [esp+1Ch] [ebp-84h]</span></span><br><span class="line">  <span class="type">int</span> v20; <span class="comment">// [esp+20h] [ebp-80h]</span></span><br><span class="line">  <span class="type">int</span> v21; <span class="comment">// [esp+24h] [ebp-7Ch] BYREF</span></span><br><span class="line">  _BYTE *v22; <span class="comment">// [esp+28h] [ebp-78h] BYREF</span></span><br><span class="line">  <span class="type">char</span> v23[<span class="number">60</span>]; <span class="comment">// [esp+2Ch] [ebp-74h] BYREF</span></span><br><span class="line">  __int128 v24[<span class="number">2</span>]; <span class="comment">// [esp+68h] [ebp-38h] BYREF</span></span><br><span class="line">  __int64 v25; <span class="comment">// [esp+88h] [ebp-18h]</span></span><br><span class="line">  <span class="type">int</span> v26; <span class="comment">// [esp+9Ch] [ebp-4h]</span></span><br><span class="line"></span><br><span class="line">  MEMORY[<span class="number">0x5FF6</span>](*(_DWORD *)(this[<span class="number">6</span>] + <span class="number">4</span>), v16);</span><br><span class="line">  v26 = <span class="number">0</span>;</span><br><span class="line">  MEMORY[<span class="number">0x7C7C</span>](v16, v17);</span><br><span class="line">  LOBYTE(v26) = <span class="number">1</span>;</span><br><span class="line">  v19 = (<span class="type">const</span> <span class="type">char</span> *)MEMORY[<span class="number">0x7C48</span>](v17);</span><br><span class="line">  v24[<span class="number">0</span>] = <span class="number">0</span>i64;</span><br><span class="line">  v24[<span class="number">1</span>] = <span class="number">0</span>i64;</span><br><span class="line">  v25 = <span class="number">0</span>i64;</span><br><span class="line">  <span class="built_in">strcpy</span>(v23, <span class="string">&quot;123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz&quot;</span>);</span><br><span class="line">  v21 = <span class="number">138</span> * <span class="built_in">strlen</span>(v19) / <span class="number">0x64</span>;</span><br><span class="line">  v14 = v21 + <span class="number">1</span>;</span><br><span class="line">  v1 = <span class="number">0</span>;</span><br><span class="line">  v22 = (_BYTE *)MEMORY[<span class="number">0x8114</span>](v21 + <span class="number">1</span>);</span><br><span class="line">  v2 = v22;</span><br><span class="line">  sub_402C08(v22, <span class="number">0</span>, v14);</span><br><span class="line">  v3 = v19;</span><br><span class="line">  v20 = (<span class="type">int</span>)(v19 + <span class="number">1</span>);</span><br><span class="line">  <span class="keyword">if</span> ( <span class="built_in">strlen</span>(v19) )</span><br><span class="line">  &#123;</span><br><span class="line">    v4 = &amp;v2[v21];</span><br><span class="line">    v18 = v4;</span><br><span class="line">    <span class="keyword">while</span> ( <span class="number">1</span> )</span><br><span class="line">    &#123;</span><br><span class="line">      v20 = ((<span class="type">char</span>)*v4 &lt;&lt; <span class="number">8</span>) + v3[v1];</span><br><span class="line">      v5 = v20 / <span class="number">58</span>;</span><br><span class="line">      *v4 = v20 % <span class="number">58</span>;</span><br><span class="line">      <span class="keyword">if</span> ( v5 )</span><br><span class="line">      &#123;</span><br><span class="line">        <span class="keyword">do</span></span><br><span class="line">        &#123;</span><br><span class="line">          v6 = (<span class="type">char</span>)*--v4;</span><br><span class="line">          v7 = (v6 &lt;&lt; <span class="number">8</span>) + v5;</span><br><span class="line">          v20 = v7 / <span class="number">58</span>;</span><br><span class="line">          *v4 = v7 % <span class="number">58</span>;</span><br><span class="line">          v5 = v20;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">while</span> ( v20 );</span><br><span class="line">        v4 = v18;</span><br><span class="line">      &#125;</span><br><span class="line">      <span class="keyword">if</span> ( ++v1 &gt;= <span class="built_in">strlen</span>(v19) )</span><br><span class="line">        <span class="keyword">break</span>;</span><br><span class="line">      v3 = v19;</span><br><span class="line">    &#125;</span><br><span class="line">    v2 = v22;</span><br><span class="line">  &#125;</span><br><span class="line">  v8 = <span class="number">0</span>;</span><br><span class="line">  <span class="keyword">if</span> ( !*v2 )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">      ++v8;</span><br><span class="line">    <span class="keyword">while</span> ( !v2[v8] );</span><br><span class="line">  &#125;</span><br><span class="line">  v9 = v21;</span><br><span class="line">  <span class="keyword">if</span> ( v8 &lt;= v21 )</span><br><span class="line">  &#123;</span><br><span class="line">    v10 = v2 - (_BYTE *)v24;</span><br><span class="line">    <span class="keyword">do</span></span><br><span class="line">    &#123;</span><br><span class="line">      v11 = (<span class="type">char</span> *)v24 + v8++;</span><br><span class="line">      *v11 = v23[(<span class="type">char</span>)v11[v10]];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">while</span> ( v8 &lt;= v9 );</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">if</span> ( !MEMORY[<span class="number">0x7C1A</span>](v24, <span class="string">&quot;56fkoP8KhwCf3v7CEz&quot;</span>) )</span><br><span class="line">  &#123;</span><br><span class="line">    <span class="keyword">if</span> ( v19 )</span><br><span class="line">      v12 = <span class="built_in">strlen</span>(v19);</span><br><span class="line">    <span class="keyword">else</span></span><br><span class="line">      v12 = <span class="number">-1</span>;</span><br><span class="line">    v22 = (_BYTE *)MEMORY[<span class="number">0x7CCC</span>](v19, v12);</span><br><span class="line">    LOBYTE(v26) = <span class="number">2</span>;</span><br><span class="line">    v21 = MEMORY[<span class="number">0x7CCC</span>](<span class="string">&quot;flag&quot;</span>, <span class="number">4</span>);</span><br><span class="line">    LOBYTE(v26) = <span class="number">3</span>;</span><br><span class="line">    MEMORY[<span class="number">0x6124</span>](this, &amp;v21, &amp;v22, <span class="number">1024</span>, <span class="number">0</span>);</span><br><span class="line">    MEMORY[<span class="number">0x7C66</span>](&amp;v21);</span><br><span class="line">    MEMORY[<span class="number">0x7C66</span>](&amp;v22);</span><br><span class="line">  &#125;</span><br><span class="line">  MEMORY[<span class="number">0x7C30</span>](v17);</span><br><span class="line">  <span class="keyword">return</span> MEMORY[<span class="number">0x7C66</span>]();</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>由上方字符串<code>123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz</code>推测为Base58编码，将字符串<code>56fkoP8KhwCf3v7CEz</code>以Base58解码后尝试提交即为flag</p>
+<h3 id="Crash"><a href="#Crash" class="headerlink" title="Crash"></a>Crash</h3><p>打开发现本程序是用Golang编写的，因此使用IDA7.6打开即可对应大部分的字符集，打开main_main看第18行为</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> ( v1[<span class="number">1</span>] == <span class="number">43LL</span> &amp;&amp; *(_DWORD *)v0 == <span class="number">1413696327</span> &amp;&amp; *(_WORD *)(v0 + <span class="number">4</span>) == <span class="number">31558</span> &amp;&amp; *(_BYTE *)(v0 + <span class="number">42</span>) == <span class="number">125</span> )</span><br></pre></td></tr></table></figure>
+<p>其中，各个等值式分别判定了<code>TCKG</code>(内存地址中倒序存储字符串),<code>&#123;F</code>,<code>&#125;</code>，因此推断这里应该就是在进行flag的判定，接着进入main_check函数</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">void</span> __golang <span class="title function_">main_check</span><span class="params">(__int64 a1, <span class="type">unsigned</span> __int64 a2)</span></span><br><span class="line">&#123;</span><br><span class="line">  __int64 v2; <span class="comment">// [rsp+10h] [rbp-68h]</span></span><br><span class="line">  __int64 v3; <span class="comment">// [rsp+10h] [rbp-68h]</span></span><br><span class="line">  __int64 v4; <span class="comment">// [rsp+10h] [rbp-68h]</span></span><br><span class="line">  __int64 v5; <span class="comment">// [rsp+18h] [rbp-60h]</span></span><br><span class="line">  __int64 v6; <span class="comment">// [rsp+18h] [rbp-60h]</span></span><br><span class="line">  __int64 v7; <span class="comment">// [rsp+18h] [rbp-60h]</span></span><br><span class="line">  __int64 v8; <span class="comment">// [rsp+18h] [rbp-60h]</span></span><br><span class="line">  __int64 v9; <span class="comment">// [rsp+18h] [rbp-60h]</span></span><br><span class="line">  __int64 v10; <span class="comment">// [rsp+18h] [rbp-60h]</span></span><br><span class="line">  __int64 v11; <span class="comment">// [rsp+20h] [rbp-58h]</span></span><br><span class="line">  __int64 v12; <span class="comment">// [rsp+20h] [rbp-58h]</span></span><br><span class="line">  __int64 v13; <span class="comment">// [rsp+20h] [rbp-58h]</span></span><br><span class="line">  __int64 v14; <span class="comment">// [rsp+20h] [rbp-58h]</span></span><br><span class="line">  __int64 v15; <span class="comment">// [rsp+20h] [rbp-58h]</span></span><br><span class="line">  __int64 v16; <span class="comment">// [rsp+20h] [rbp-58h]</span></span><br><span class="line">  __int64 v17; <span class="comment">// [rsp+28h] [rbp-50h]</span></span><br><span class="line">  __int64 v18; <span class="comment">// [rsp+28h] [rbp-50h]</span></span><br><span class="line">  <span class="type">char</span> v19[<span class="number">32</span>]; <span class="comment">// [rsp+30h] [rbp-48h] BYREF</span></span><br><span class="line">  <span class="type">char</span> v20[<span class="number">32</span>]; <span class="comment">// [rsp+50h] [rbp-28h] BYREF</span></span><br><span class="line"></span><br><span class="line">  <span class="keyword">if</span> ( a2 &lt; <span class="number">0x1E</span> )</span><br><span class="line">    runtime_panicSliceAlen();</span><br><span class="line">  v2 = main_encrypto(a1 + <span class="number">6</span>, <span class="number">24LL</span>);</span><br><span class="line">  <span class="keyword">if</span> ( v5 == <span class="number">44</span> )</span><br><span class="line">  &#123;</span><br><span class="line">    v11 = runtime_memequal(v2, (__int64)<span class="string">&quot;o/aWPjNNxMPZDnJlNp0zK5+NLPC4Tv6kqdJqjkL0XkA=&quot;</span>, <span class="number">44LL</span>, <span class="number">44</span>);</span><br><span class="line">    <span class="keyword">if</span> ( (_BYTE)v5 )</span><br><span class="line">    &#123;</span><br><span class="line">      <span class="keyword">if</span> ( a2 &lt; <span class="number">0x22</span> )</span><br><span class="line">        runtime_panicSliceAlen();</span><br><span class="line">      v17 = runtime_stringtoslicebyte((__int64)v19, a1 + <span class="number">30</span>, <span class="number">4LL</span>, v5, v11);</span><br><span class="line">      Encrypt_HashHex2(v6, v12, v17, v6, v12);</span><br><span class="line">      <span class="keyword">if</span> ( v13 == <span class="number">64</span> )</span><br><span class="line">      &#123;</span><br><span class="line">        v14 = runtime_memequal(</span><br><span class="line">                v7,</span><br><span class="line">                (__int64)<span class="string">&quot;6e2b55c78937d63490b4b26ab3ac3cb54df4c5ca7d60012c13d2d1234a732b74&quot;</span>,</span><br><span class="line">                <span class="number">64LL</span>,</span><br><span class="line">                v7);</span><br><span class="line">        <span class="keyword">if</span> ( (_BYTE)v7 )</span><br><span class="line">        &#123;</span><br><span class="line">          <span class="keyword">if</span> ( a2 &lt; <span class="number">0x26</span> )</span><br><span class="line">            runtime_panicSliceAlen();</span><br><span class="line">          v18 = runtime_stringtoslicebyte((__int64)v20, a1 + <span class="number">34</span>, <span class="number">4LL</span>, v7, v14);</span><br><span class="line">          Encrypt_HashHex5(v8, v15, v18, v8, v15);</span><br><span class="line">          <span class="keyword">if</span> ( v16 == <span class="number">128</span> )</span><br><span class="line">          &#123;</span><br><span class="line">            runtime_memequal(</span><br><span class="line">              v9,</span><br><span class="line">              (__int64)<span class="string">&quot;6500fe72abcab63d87f213d2218b0ee086a1828188439ca485a1a40968fd272865d5ca4d5ef5a651270a52ff952d955c9&quot;</span></span><br><span class="line">                       <span class="string">&quot;b757caae1ecce804582ae78f87fa3c9&quot;</span>,</span><br><span class="line">              <span class="number">128LL</span>,</span><br><span class="line">              v9);</span><br><span class="line">            <span class="keyword">if</span> ( (_BYTE)v9 )</span><br><span class="line">            &#123;</span><br><span class="line">              <span class="keyword">if</span> ( a2 &lt; <span class="number">0x2A</span> )</span><br><span class="line">                runtime_panicSliceAlen();</span><br><span class="line">              main_hash(a1 + <span class="number">38</span>, <span class="number">4LL</span>, v3, v9);</span><br><span class="line">              <span class="keyword">if</span> ( v10 == <span class="number">32</span> )</span><br><span class="line">                runtime_memequal(v4, (__int64)<span class="string">&quot;ff6e2fd78aca4736037258f0ede4ecf0&quot;</span>, <span class="number">32LL</span>, <span class="number">32</span>);</span><br><span class="line">            &#125;</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>可以看出，总共分为了若干段，第一段有六个字符，且使用了DES加密（可直接爆破）第二段是使用了sha256加密，第三段是使用了sha512加密，最后一段则使用了md5加密，以上若干加密段皆可根据前面所截取提交内容内的长度推断该段加密前明文的长度，因此除第一个DES爆破解密已有相关网站外，其余皆写相同脚本爆破即可<br>第一段DES加密可以从<code>encoding_json_Unmarshal</code>内找到key和iv</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">&quot;key&quot;: &quot;WelcomeToTheGKCTF2021XXX&quot;,</span><br><span class="line">&quot;iv&quot;: &quot;1Ssecret&quot;</span><br></pre></td></tr></table></figure>
+<p>接着发现此处key共有24byte，因此推测为3des，因此进行相应的爆破即可得到第一段flag，后面几段的解题脚本如下：<br>sha256 -&gt; 4位</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> itertools</span><br><span class="line"></span><br><span class="line">dateset = string.ascii_lowercase + string.digits</span><br><span class="line"></span><br><span class="line">res = <span class="string">&quot;6e2b55c78937d63490b4b26ab3ac3cb54df4c5ca7d60012c13d2d1234a732b74&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_strings</span>(<span class="params">length=<span class="number">4</span></span>):</span><br><span class="line">    chars = string.ascii_lowercase + string.digits</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> itertools.product(chars, repeat=length):</span><br><span class="line">        tmp = <span class="string">&quot;&quot;</span>.join(item)</span><br><span class="line">        aa = hashlib.sha256(tmp.encode(<span class="string">&#x27;utf-8&#x27;</span>)).hexdigest()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> aa.hexdigest() == res:</span><br><span class="line">            <span class="built_in">print</span>(tmp)</span><br><span class="line">            exit(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">generate_strings()</span><br></pre></td></tr></table></figure>
+
+<p>sha512 -&gt; 4位</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> itertools</span><br><span class="line"></span><br><span class="line">dateset = string.ascii_lowercase + string.digits</span><br><span class="line"></span><br><span class="line">res = <span class="string">&quot;6500fe72abcab63d87f213d2218b0ee086a1828188439ca485a1a40968fd272865d5ca4d5ef5a651270a52ff952d955c9b757caae1ecce804582ae78f87fa3c9&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_strings</span>(<span class="params">length=<span class="number">4</span></span>):</span><br><span class="line">    chars = string.ascii_lowercase + string.digits</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> itertools.product(chars, repeat=length):</span><br><span class="line">        tmp = <span class="string">&quot;&quot;</span>.join(item)</span><br><span class="line">        aa = hashlib.sha512(tmp.encode(<span class="string">&#x27;utf-8&#x27;</span>)).hexdigest()</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> aa.hexdigest() == res:</span><br><span class="line">            <span class="built_in">print</span>(tmp)</span><br><span class="line">            exit(<span class="number">0</span>)</span><br><span class="line"></span><br><span class="line"></span><br><span class="line"></span><br><span class="line">generate_strings()</span><br></pre></td></tr></table></figure>
+
+<p>md5 -&gt; 4位</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hashlib</span><br><span class="line"><span class="keyword">import</span> string</span><br><span class="line"><span class="keyword">import</span> itertools</span><br><span class="line"></span><br><span class="line">dateset = string.ascii_lowercase + string.digits</span><br><span class="line"></span><br><span class="line">flag = <span class="string">&quot;ff6e2fd78aca4736037258f0ede4ecf0&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">def</span> <span class="title function_">generate_strings</span>(<span class="params">length=<span class="number">4</span></span>):</span><br><span class="line">    chars = string.ascii_lowercase + string.digits</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> itertools.product(chars, repeat=length):</span><br><span class="line">        md5 = hashlib.md5()</span><br><span class="line"></span><br><span class="line">        tmp = <span class="string">&quot;&quot;</span>.join(item)</span><br><span class="line">        md5.update(tmp.encode(<span class="string">&#x27;utf-8&#x27;</span>))</span><br><span class="line"></span><br><span class="line">        <span class="keyword">if</span> md5.hexdigest() == flag:</span><br><span class="line">            <span class="built_in">print</span>(tmp)</span><br><span class="line">            exit(<span class="number">0</span>)</span><br></pre></td></tr></table></figure>
+
+<p>将以上爆破出来的值按照顺序连在一起即为flag</p>
+<h2 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h2><h3 id="easycms"><a href="#easycms" class="headerlink" title="easycms"></a>easycms</h3><p>题目提示五位弱密码，尝试admin/12345后登陆成功。<br>尝试更改主题相关模板代码提示需要创建<code>/system/tmp/xxxx.txt</code>(貌似是动态的四个字母）。<br>在素材库上传文件可观察到路径是文件名直接拼接来的，故可利用目录穿越创建上述要求创建的文件。再向模板内插入shell后读flag即可。    </p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#MISC"><span class="toc-number">1.</span> <span class="toc-text">MISC</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E7%AD%BE%E5%88%B0"><span class="toc-number">1.1.</span> <span class="toc-text">签到</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E4%BD%A0%E7%9F%A5%E9%81%93apng%E5%90%97"><span class="toc-number">1.2.</span> <span class="toc-text">你知道apng吗</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E9%93%B6%E6%9D%8F%E5%B2%9B%E3%81%AE%E5%A5%87%E5%A6%99%E5%86%92%E9%99%A9"><span class="toc-number">1.3.</span> <span class="toc-text">银杏岛の奇妙冒险</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#FireFox-Forensics"><span class="toc-number">1.4.</span> <span class="toc-text">FireFox Forensics</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#excel%E9%AA%9A%E6%93%8D%E4%BD%9C"><span class="toc-number">1.5.</span> <span class="toc-text">excel骚操作</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Reverse"><span class="toc-number">2.</span> <span class="toc-text">Reverse</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#QQQQT"><span class="toc-number">2.1.</span> <span class="toc-text">QQQQT</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Crash"><span class="toc-number">2.2.</span> <span class="toc-text">Crash</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Web"><span class="toc-number">3.</span> <span class="toc-text">Web</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#easycms"><span class="toc-number">3.1.</span> <span class="toc-text">easycms</span></a></li></ol></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&text=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&title=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&is_video=false&description=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root&body=Check out this article: https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&title=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&title=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&title=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&title=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&name=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2021/07/05/gkctf-x-dasctf-emergency-challenge-cup-2021-writeup/&t=CTF Writeups - GKCTF X DASCTF应急挑战杯2021 - Maple_root"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2022
+    b_y
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.7/dist/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'recharging-runtime';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

